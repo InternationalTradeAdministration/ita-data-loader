@@ -1181,24 +1181,6 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['BEAAPI']['Results']['DIRECTIONOFINVESTMENT']"
-								},
-								"sink": {
-									"name": "DIRECTIONOFINVESTMENT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "$['BEAAPI']['Results']['OwnershipLevel']"
-								},
-								"sink": {
-									"name": "OwnershipLevel",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
 									"path": "['Year']"
 								},
 								"sink": {
@@ -1285,6 +1267,40 @@
 								"sink": {
 									"name": "DataValue",
 									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['ColumnParentCode']"
+								},
+								"sink": {
+									"name": "ColumnParentCode"
+								}
+							},
+							{
+								"source": {
+									"path": "['ColumnGParentCode']"
+								},
+								"sink": {
+									"name": "ColumnGParentCode"
+								}
+							},
+							{
+								"source": {
+									"path": "$['BEAAPI']['Results']['DIRECTIONOFINVESTMENT']"
+								},
+								"sink": {
+									"name": "DIRECTIONOFINVESTMENT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['BEAAPI']['Results']['OwnershipLevel']"
+								},
+								"sink": {
+									"name": "OwnershipLevel",
+									"type": "Int32"
 								}
 							}
 						],
