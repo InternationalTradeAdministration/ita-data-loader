@@ -58,6 +58,16 @@
 			{
 				"name": "DataValue",
 				"type": "varchar"
+			},
+			{
+				"name": "ColumnParentCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ColumnGParentCode",
+				"type": "int",
+				"precision": 10
 			}
 		],
 		"typeProperties": {
