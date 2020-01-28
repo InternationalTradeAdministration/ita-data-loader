@@ -1094,6 +1094,22 @@
 							},
 							{
 								"source": {
+									"path": "['ColumnParentCode']"
+								},
+								"sink": {
+									"name": "ColumnParentCode"
+								}
+							},
+							{
+								"source": {
+									"path": "['ColumnGParentCode']"
+								},
+								"sink": {
+									"name": "ColumnGParentCode"
+								}
+							},
+							{
+								"source": {
 									"path": "$['BEAAPI']['Results']['DIRECTIONOFINVESTMENT']"
 								},
 								"sink": {
