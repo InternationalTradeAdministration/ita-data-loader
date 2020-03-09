@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import static gov.ita.dataloader.TestHelpers.formattedResults;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class WorldBankEaseIndexCsvTranslatorTest {
   private TestHelpers h = new TestHelpers();

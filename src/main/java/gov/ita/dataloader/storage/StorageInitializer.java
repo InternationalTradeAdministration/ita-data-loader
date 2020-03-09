@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static gov.ita.dataloader.ResourceHelper.getResourceAsString;
 
@@ -32,7 +34,7 @@ public class StorageInitializer {
       if (!existingContainers.contains(containerName)) {
         String path = "/fixtures/" + containerName + ".json";
         storage.createContainer(containerName);
-        storage.save("configuration.json", getResourceAsString(path).getBytes(), null, containerName, false);
+        storage.save("configuration.json", getResourceAsString(path).getBytes(), null, containerName, false, false);
       }
     }
   }

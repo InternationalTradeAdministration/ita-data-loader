@@ -1,4 +1,4 @@
-package gov.ita.dataloader;
+package gov.ita.dataloader.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;

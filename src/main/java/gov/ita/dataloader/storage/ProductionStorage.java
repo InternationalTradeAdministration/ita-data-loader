@@ -52,7 +52,7 @@ public class ProductionStorage implements Storage {
   }
 
   @Override
-  public void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload) {
+  public void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload, Boolean pii) {
     try {
       if (user == null) user = accountName;
 
@@ -69,7 +69,7 @@ public class ProductionStorage implements Storage {
         new TransferManagerUploadToBlockBlobOptions(
           null,
           makeHeader(fileName),
-          makeMetaData(user, userUpload),
+          makeMetaData(user, userUpload, pii),
           null,
           10);
       TransferManager.uploadFileToBlockBlob(fileChannel, blobURL, 1000000, 20000000, options).blockingGet();
@@ -101,6 +101,7 @@ public class ProductionStorage implements Storage {
         .stream().map(
           x -> new BlobMetaData(
             x.name(),
+            x.snapshot(),
             buildUrlForBlob(containerName, x.name(), x.snapshot()),
             x.properties().contentLength(),
             containerName,
@@ -111,11 +112,6 @@ public class ProductionStorage implements Storage {
     }
 
     return Collections.emptyList();
-  }
-
-  @Override
-  public List<BlobMetaData> getBlobMetadata(String containerName) {
-    return getBlobMetadata(containerName, true);
   }
 
   @Override
@@ -164,14 +160,24 @@ public class ProductionStorage implements Storage {
   }
 
   @Override
-  public void delete(String containerName, String blobName) {
-    List<BlobMetaData> blobMetadata = getBlobMetadata(containerName, false);
-    for (BlobMetaData b : blobMetadata) {
-      if (b.getFileName().contains(blobName)) {
-        log.info("Deleting blob: {}", b.getFileName());
-        makeServiceURL().createContainerURL(containerName).
-          createBlobURL(b.getFileName())
-          .delete(INCLUDE, null, null).blockingGet();
+  public void delete(String containerName, String blobName, String snapshot) {
+    if (snapshot == null) {
+      for (BlobMetaData b : getBlobMetadata(containerName, false)) {
+        if (b.getFileName().contains(blobName)) {
+          log.info("Deleting blob: {}", b.getFileName());
+          makeServiceURL().createContainerURL(containerName).
+            createBlobURL(b.getFileName())
+            .delete(INCLUDE, null, null).blockingGet();
+        }
+      }
+    } else {
+      try {
+        log.info("Deleting blob snapshot: {} {}", blobName, snapshot);
+        makeServiceURL().createContainerURL(containerName)
+          .createBlobURL(blobName).withSnapshot(snapshot)
+          .delete().blockingGet();
+      } catch (MalformedURLException | UnknownHostException e) {
+        e.printStackTrace();
       }
     }
   }
@@ -200,10 +206,11 @@ public class ProductionStorage implements Storage {
     return null;
   }
 
-  private Metadata makeMetaData(String uploadedBy, Boolean userUpload) {
+  private Metadata makeMetaData(String uploadedBy, Boolean userUpload, Boolean pii) {
     Metadata metadata = new Metadata();
     metadata.put("uploaded_by", uploadedBy);
     metadata.put("user_upload", userUpload.toString());
+    metadata.put("pii", pii.toString());
     return metadata;
   }
 

@@ -60,8 +60,9 @@ public class IngestController {
   //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
   @PutMapping("/api/file")
   public void saveFile(@RequestParam("file") MultipartFile file,
-                       @RequestParam("containerName") String containerName) throws IOException {
-    storage.save(file.getOriginalFilename(), file.getBytes(), authenticationFacade.getUserName(), containerName, true);
+                       @RequestParam("containerName") String containerName,
+                       @RequestParam("pii") Boolean pii) throws IOException {
+    storage.save(file.getOriginalFilename(), file.getBytes(), authenticationFacade.getUserName(), containerName, true, pii);
     storage.makeSnapshot(containerName, file.getOriginalFilename());
     translationProcessor.initProcessing(containerName, file.getOriginalFilename(), file.getBytes(), authenticationFacade.getUserName());
   }
@@ -69,8 +70,9 @@ public class IngestController {
   //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
   @DeleteMapping("/api/file")
   public void deleteFile(@RequestParam("fileName") String fileName,
-                         @RequestParam("containerName") String containerName) {
-    storage.delete(containerName, fileName);
+                         @RequestParam("containerName") String containerName,
+                         @RequestParam("snapshot") String snapshot) {
+    storage.delete(containerName, fileName, snapshot);
   }
 
   //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
@@ -84,7 +86,7 @@ public class IngestController {
   public void saveConfiguration(@RequestBody DataloaderConfig dataloaderConfig,
                                 @RequestParam("containerName") String containerName) throws JsonProcessingException {
     byte[] dataSetConfigsJsonBytes = objectMapper.writeValueAsString(dataloaderConfig).getBytes();
-    storage.save("configuration.json", dataSetConfigsJsonBytes, authenticationFacade.getUserName(), containerName, true);
+    storage.save("configuration.json", dataSetConfigsJsonBytes, authenticationFacade.getUserName(), containerName, true, false);
     storage.makeSnapshot(containerName, "configuration.json");
   }
 
@@ -95,29 +97,27 @@ public class IngestController {
 
   @GetMapping(value = "/api/container-metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<BlobMetaData> getStorageMetadata(@RequestParam("containerName") String containerName) {
-    return storage.getBlobMetadata(containerName).stream()
+    return storage.getBlobMetadata(containerName, true).stream()
       .filter(blobMetaData -> !blobMetaData.getFileName().equals("configuration.json"))
       .filter(blobMetaData -> !blobMetaData.getFileName().startsWith("translated"))
-      .map(blobMetaData -> {
-        Map<String, String> metadata = blobMetaData.getMetadata();
-        if (metadata == null) {
-          metadata = new HashMap<>();
-          metadata.put("uploaded_by", "---");
-          metadata.put("user_upload", "true");
-        }
-
-        if (!metadata.containsKey("uploaded_by")) {
-          metadata.put("uploaded_by", "---");
-        }
-
-        if (!metadata.containsKey("user_upload")) {
-          metadata.put("user_upload", "true");
-        }
-
-        blobMetaData.setMetadata(metadata);
-        return blobMetaData;
-      })
+      .map(this::handleLegacyBlobMetadata)
       .collect(Collectors.toList());
+  }
+
+  private BlobMetaData handleLegacyBlobMetadata(BlobMetaData blobMetaData) {
+    Map<String, String> metadata = blobMetaData.getMetadata();
+    if (metadata == null) {
+      metadata = new HashMap<>();
+      metadata.put("uploaded_by", "---");
+      metadata.put("user_upload", "true");
+      metadata.put("pii", "false");
+    }
+
+    if (!metadata.containsKey("uploaded_by")) metadata.put("uploaded_by", "---");
+    if (!metadata.containsKey("user_upload")) metadata.put("user_upload", "true");
+    if (!metadata.containsKey("pii")) metadata.put("pii", "false");
+    blobMetaData.setMetadata(metadata);
+    return blobMetaData;
   }
 
   @GetMapping(value = "/api/{containerName}/{blobName}")

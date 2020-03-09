@@ -130,7 +130,7 @@ public class AutomatedIngestProcessor {
       }
     }
 
-    storage.save(fileName, fileBytes, userName, containerName, false);
+    storage.save(fileName, fileBytes, userName, containerName, false, false);
     storage.makeSnapshot(containerName, fileName);
     translationProcessor.initProcessing(containerName, fileName, fileBytes, userName);
   }

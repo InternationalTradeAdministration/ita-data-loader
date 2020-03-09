@@ -62,9 +62,9 @@ public class IngestControllerTest {
     when(multipartFile.getBytes()).thenReturn(SOME_BYTES);
     when(multipartFile.getOriginalFilename()).thenReturn("OG File Name.csv");
 
-    ingestController.saveFile(multipartFile, "cool-container");
+    ingestController.saveFile(multipartFile, "cool-container", false);
 
-    verify(storage, times(1)).save("OG File Name.csv", SOME_BYTES, "TestUser@gmail.com", "cool-container", true);
+    verify(storage, times(1)).save("OG File Name.csv", SOME_BYTES, "TestUser@gmail.com", "cool-container", true, false);
     verify(storage, times(1)).makeSnapshot("cool-container", "OG File Name.csv");
     verify(translationProcessor, times(1))
       .initProcessing("cool-container", "OG File Name.csv", SOME_BYTES, "TestUser@gmail.com");
@@ -77,7 +77,7 @@ public class IngestControllerTest {
     when(multipartFile.getOriginalFilename()).thenReturn("OG File Name.csv");
     when(multipartFile.getBytes()).thenReturn(SOME_BYTES);
 
-    ingestController.saveFile(multipartFile, "cool-container");
+    ingestController.saveFile(multipartFile, "cool-container", false);
 
     verify(translationProcessor, times(1))
       .initProcessing("cool-container", "OG File Name.csv", SOME_BYTES, "TestUser@gmail.com");

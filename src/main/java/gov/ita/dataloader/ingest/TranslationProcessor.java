@@ -59,7 +59,7 @@ public class TranslationProcessor {
     if (translator != null) {
       log.info("Processing {}", containerFileCompositeKey);
       ingestProcessorStatus.setPhase(DELETING_OLD_TRANSLATIONS);
-      storage.delete(containerName, fileRootName);
+      storage.delete(containerName, fileRootName, null);
 
       ingestProcessorStatus.setPhase(CREATING_NEW_TRANSLATIONS);
       if (translator.type().equals(TranslatorType.CSV) && translator.pageSize() != -1) {
@@ -78,13 +78,13 @@ public class TranslationProcessor {
           int offset = currentPage * pageSize;
           byte[] partitionedBytes = getFilePartition(fileBytes, offset, pageSize);
           byte[] translatedBytes = translator.translate(partitionedBytes);
-          storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true);
+          storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true, false);
           currentPage++;
         }
       } else {
         log.info("Translating {}", containerFileCompositeKey);
         byte[] translatedBytes = translator.translate(fileBytes);
-        storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true);
+        storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true, false);
       }
     }
     ingestProcessorStatus.setPhase(DONE);

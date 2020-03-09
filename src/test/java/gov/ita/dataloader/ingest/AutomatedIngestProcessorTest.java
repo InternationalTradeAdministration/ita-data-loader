@@ -12,7 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -57,11 +60,11 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(storage, times(1))
-      .save("rad.csv", RAD_BYTES, "TestUser@gmail.com", "a-container", false);
+      .save("rad.csv", RAD_BYTES, "TestUser@gmail.com", "a-container", false, false);
     verify(storage, times(1))
-      .save("very-rad.csv", VERY_RAD_BYTES, "TestUser@gmail.com", "a-container", false);
+      .save("very-rad.csv", VERY_RAD_BYTES, "TestUser@gmail.com", "a-container", false, false);
     verify(storage, times(1))
-      .save("really-rad.csv", REALLY_RAD_BYTES, "TestUser@gmail.com", "a-container", false);
+      .save("really-rad.csv", REALLY_RAD_BYTES, "TestUser@gmail.com", "a-container", false, false);
 
     verify(storage, times(1))
       .makeSnapshot("a-container", "rad.csv");
@@ -87,7 +90,7 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(storage, times(0))
-      .save("rad.csv", RAD_BYTES, "TestUser@gmail.com", "a-container", false);
+      .save("rad.csv", RAD_BYTES, "TestUser@gmail.com", "a-container", false, false);
     verify(storage, times(0))
       .makeSnapshot("a-container", "rad.csv");
     verify(translationProcessor, times(0))
@@ -106,7 +109,7 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(storage, times(1))
-      .save("vangos.csv", "The best sport is football!".getBytes(), "TestUser@gmail.com", "a-container", false);
+      .save("vangos.csv", "The best sport is football!".getBytes(), "TestUser@gmail.com", "a-container", false, false);
     verify(storage, times(1))
       .makeSnapshot("a-container", "vangos.csv");
     verify(translationProcessor, times(1))

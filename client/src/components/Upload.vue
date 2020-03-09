@@ -10,16 +10,19 @@
       <dataloader-menu :containerName="containerName" />
       <div class="sub-content">
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-40">
+          <div class="md-layout-item md-size-30">
             <md-field>
               <label>Select file</label>
               <md-file @md-change="onFileSelection($event)"></md-file>
             </md-field>
           </div>
-          <div class="md-layout-item md-size-50">
+          <div class="md-layout-item md-size-30">
             <md-autocomplete v-model="destinationFileName" :md-options="destinationFileNameOptions">
               <label>File name</label>
             </md-autocomplete>
+          </div>
+          <div class="md-layout-item md-size-10">
+            <md-checkbox v-if="!uploading" v-model="containsPii">Contains PII</md-checkbox>
           </div>
           <div class="md-layout-item md-size-10">
             <md-button
@@ -59,8 +62,11 @@
               v-model="displaySnapshots"
               @change="updateBusinessUnitContent()"
             >Snapshots</md-switch>
-            <md-switch class="display-switch" v-model="displayDeleteButton">Delete Button
-              <md-tooltip md-direction="right">To recover a deleted file, please contact technical support.</md-tooltip>
+            <md-switch class="display-switch" v-model="displayDeleteButton">
+              Delete Button
+              <md-tooltip
+                md-direction="right"
+              >To recover a deleted file, please contact technical support.</md-tooltip>
             </md-switch>
           </div>
         </div>
@@ -68,7 +74,8 @@
           <md-table v-model="storageMetadata" md-sort="name" md-sort-order="asc">
             <md-table-row slot-scope="{ item }" slot="md-table-row">
               <md-table-cell md-label="File Name" md-sort-by="fileName">
-                <a :href="item.url">{{item.fileName}}</a>
+                <a v-if="item.isSnapshot" :href="item.url">{{item.fileName + ' (' + item.snapshot + ')'}}</a>
+                <a v-else :href="item.url">{{item.fileName}}</a>
               </md-table-cell>
               <md-table-cell md-label="Uploaded At" md-sort-by="uploadedAt">{{item.uploadedAt}}</md-table-cell>
               <md-table-cell
@@ -76,16 +83,23 @@
                 md-sort-by="metadata.uploaded_by"
               >{{item.metadata.uploaded_by}}</md-table-cell>
               <md-table-cell md-label="Size" md-sort-by="size" md-numeric>{{item.size}}</md-table-cell>
+              <md-table-cell md-label="PII" md-sort-by="metadata.pii">
+                <span v-if="item.metadata.pii === 'true'" class="dot filled"></span>
+                <span v-else class="dot"></span>
+              </md-table-cell>
               <md-table-cell md-label="Upload" md-sort-by="metadata.user_upload">
                 <span v-if="item.metadata.user_upload === 'true'" class="dot filled"></span>
                 <span v-else class="dot"></span>
               </md-table-cell>
               <md-table-cell md-label="Snapshot" md-sort-by="snapshot">
-                <span v-if="item.snapshot === 'true'" class="dot filled"></span>
+                <span v-if="item.isSnapshot" class="dot filled"></span>
                 <span v-else class="dot"></span>
               </md-table-cell>
               <md-table-cell v-if="displayDeleteButton">
-                <md-button v-if="item.snapshot === 'false'" class="md-icon-button" @click="deleteFile(item.fileName)">      
+                <md-button
+                  class="md-icon-button"
+                  @click="deleteFile(item.fileName, item.snapshot)"
+                >
                   <md-icon>delete</md-icon>
                 </md-button>
               </md-table-cell>
@@ -185,6 +199,7 @@ export default {
       destinationFileNameOptions: [],
       originalFileName: null,
       destinationFileName: null,
+      containsPii: false,
       errorOccured: false,
       errorMessage: null,
       uploadSuccessful: false,
@@ -213,10 +228,10 @@ export default {
       this.storageMetadata = storageMetadata
         .filter(metadata => {
           if (this.displaySnapshots) return true;
-          else return !metadata.url.includes("?snapshot=");
+          else return !metadata.snapshot;
         })
         .map(metadata => {
-          metadata.snapshot = metadata.url.includes("?snapshot=").toString();
+          metadata.isSnapshot = (metadata.snapshot) ? true : false;
           return metadata;
         });
 
@@ -268,6 +283,7 @@ export default {
       formData.append("file", this.fileBlob, this.destinationFileName);
       const message = await this.repository._save(
         this.containerName,
+        this.containsPii,
         formData
       );
       this.uploadSuccessful = true;
@@ -284,11 +300,11 @@ export default {
     async updateContainer(containerName) {
       this.containerName = containerName;
       await this.updateBusinessUnitContent();
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
-    async deleteFile(fileName) {
-      await this.repository._deleteBlob(this.containerName, fileName)
-      this.storageMetadata = this.storageMetadata.filter(m => m.fileName !== fileName);
+    async deleteFile(fileName, snapshot) {
+      await this.repository._deleteBlob(this.containerName, fileName, snapshot);
+      await this.updateBusinessUnitContent()
     }
   }
 };

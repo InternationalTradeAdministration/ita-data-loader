@@ -20,7 +20,7 @@ public class DevelopmentStorage implements Storage {
   }
 
   @Override
-  public void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload) {
+  public void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload, Boolean pii) {
     log.info("Saving blob: {}, {}, {}", fileName, containerName, user);
 
     Map<String, byte[]> containerContent = storageContent.get(containerName);
@@ -37,7 +37,7 @@ public class DevelopmentStorage implements Storage {
   }
 
   @Override
-  public List<BlobMetaData> getBlobMetadata(String containerName) {
+  public List<BlobMetaData> getBlobMetadata(String containerName, Boolean withSnapshots) {
     List<BlobMetaData> blobMetaDataList = new ArrayList<>();
 
     Map<String, String> metadata = new HashMap<>();
@@ -49,6 +49,7 @@ public class DevelopmentStorage implements Storage {
         for (String fileName : containerContent.keySet()) {
           BlobMetaData blobMetaData = new BlobMetaData(
             fileName,
+            null,
             String.format("http://some-cloud-strage-url.com/%s/%s", containerName, fileName),
             123L,
             containerName,
@@ -61,11 +62,6 @@ public class DevelopmentStorage implements Storage {
     }
 
     return blobMetaDataList;
-  }
-
-  @Override
-  public List<BlobMetaData> getBlobMetadata(String containerName, Boolean withSnapshots) {
-    return getBlobMetadata(containerName, withSnapshots);
   }
 
   @Override
@@ -89,7 +85,7 @@ public class DevelopmentStorage implements Storage {
   }
 
   @Override
-  public void delete(String containerName, String blobPattern) {
+  public void delete(String containerName, String blobPattern, String snapshot) {
     for (String container : storageContent.keySet()) {
       if (container.equals(containerName)) {
         Map<String, byte[]> containerContent = storageContent.get(container);

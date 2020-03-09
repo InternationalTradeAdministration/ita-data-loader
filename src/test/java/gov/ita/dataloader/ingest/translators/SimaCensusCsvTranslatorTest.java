@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static gov.ita.dataloader.TestHelpers.formattedResults;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SimaCensusCsvTranslatorTest {
 

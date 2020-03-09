@@ -6,11 +6,9 @@ import java.util.Set;
 public interface Storage {
   void createContainer(String containerName);
 
-  void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload);
+  void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload, Boolean pii);
 
   String getListBlobsUrl(String containerName);
-
-  List<BlobMetaData> getBlobMetadata(String containerName);
 
   List<BlobMetaData> getBlobMetadata(String containerName, Boolean withSnapshots);
 
@@ -22,5 +20,5 @@ public interface Storage {
 
   void makeSnapshot(String containerName, String blobName);
 
-  void delete(String containerName, String blobPattern);
+  void delete(String containerName, String blobPattern, String snapshot);
 }

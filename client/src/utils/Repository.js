@@ -1,12 +1,13 @@
 const axios = require('axios')
 
 export default class Repository {
-  async _save (containerName, file) {
+  async _save (containerName, pii, file) {
     let fileSaveResponse = await axios({
       url: '/api/file',
       method: 'PUT',
       params: {
-        containerName
+        containerName,
+        pii
       },
       data: file
     })
@@ -90,13 +91,14 @@ export default class Repository {
     return uploadStatus.data
   }
 
-  async _deleteBlob (containerName, fileName) {
+  async _deleteBlob (containerName, fileName, snapshot) {
     await axios({
       url: '/api/file',
       method: 'DELETE',
       params: {
         containerName,
-        fileName
+        fileName,
+        snapshot
       }
     })
   }

@@ -1,8 +1,8 @@
 package gov.ita.dataloader.ingest.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.ita.dataloader.business_unit.BusinessUnit;
+import gov.ita.dataloader.business_unit.BusinessUnitService;
 import gov.ita.dataloader.security.AuthenticationFacade;
-import gov.ita.dataloader.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
@@ -17,28 +17,22 @@ import java.util.stream.Collectors;
 public class ProductionBusinessUnitController {
 
   @Autowired
-  private ObjectMapper objectMapper;
-
-  @Autowired
   private AuthenticationFacade authenticationFacade;
 
   @Autowired
-  private Storage storage;
+  private BusinessUnitService businessUnitService;
 
   @GetMapping(value = "/api/business-units", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<BusinessUnit> getBusinessUnits() throws Exception {
-    byte[] dataloaderConfig = storage.getBlob("dataloader", "configuration.json");
-    BusinessUnitConfigResponse buc = objectMapper.readValue(dataloaderConfig, BusinessUnitConfigResponse.class);
-    return buc.getBusinessUnits().stream()
+    List<BusinessUnit> businessUnits = businessUnitService.getBusinessUnits();
+    return businessUnits.stream()
       .filter(businessUnit -> businessUnit.getUsers().contains(authenticationFacade.getUserName().toLowerCase()))
       .collect(Collectors.toList());
   }
 
   @GetMapping(value = "/api/storage-containers", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<String> getStorageContainers() throws Exception {
-    byte[] dataloaderConfig = storage.getBlob("dataloader", "configuration.json");
-    BusinessUnitConfigResponse buc = objectMapper.readValue(dataloaderConfig, BusinessUnitConfigResponse.class);
-    return buc.getBusinessUnits().stream().map(BusinessUnit::getContainerName).collect(Collectors.toList());
+    return businessUnitService.getStorageContainers();
   }
 
 }

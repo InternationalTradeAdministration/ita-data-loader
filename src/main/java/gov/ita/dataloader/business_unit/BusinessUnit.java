@@ -1,4 +1,4 @@
-package gov.ita.dataloader.ingest.configuration;
+package gov.ita.dataloader.business_unit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

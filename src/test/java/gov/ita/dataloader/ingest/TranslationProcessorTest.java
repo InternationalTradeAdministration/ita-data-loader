@@ -10,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -53,10 +51,10 @@ public class TranslationProcessorTest {
     TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory, processorStatusService);
     translationProcessor.initProcessing("some-container", "some-file-name.csv", wholeFile, "TestUser@gmail.com");
 
-    verify(storage).delete("some-container", "translated/some-file-name.csv");
-    verify(storage).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true));
-    verify(storage).save(anyString(), eq(SECOND_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true));
-    verify(storage).save(anyString(), eq(THIRD_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true));
+    verify(storage).delete("some-container", "translated/some-file-name.csv", null);
+    verify(storage).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
+    verify(storage).save(anyString(), eq(SECOND_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
+    verify(storage).save(anyString(), eq(THIRD_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
   }
 
   @Test
@@ -70,8 +68,8 @@ public class TranslationProcessorTest {
     TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory, processorStatusService);
     translationProcessor.initProcessing("some-container", "some-file-name.csv", wholeFile, "TestUser@gmail.com");
 
-    verify(storage, never()).delete("some-container", "translated/some-file-name.csv");
-    verify(storage, never()).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("TestUser@gmail.com"), eq("some-container"), eq(true));
+    verify(storage, never()).delete("some-container", "translated/some-file-name.csv", null);
+    verify(storage, never()).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("TestUser@gmail.com"), eq("some-container"), eq(true), eq(false));
   }
 
 }
