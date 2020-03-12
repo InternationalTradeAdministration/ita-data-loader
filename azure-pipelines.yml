@@ -4,10 +4,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-16.04'
 
-variables:
-  containerRegestryServiceConnection: 'ITADEV2-MSDataServicesAzure'
-  imageName: 'dataservices.azurecr.io/ita-dataloader'
-
 steps:
   - task: Gradle@2
     inputs:
@@ -16,11 +12,11 @@ steps:
   - script: |
       ./build.sh
     displayName: Build project artifacts
-  - task: Docker@2
-    displayName: Build & Push docker image
+  - task: DockerCompose@0
     inputs:
-      containerRegistry: $(containerRegestryServiceConnection)
-      repository: $(imageName)
-      command: 'buildAndPush'
-      Dockerfile: 'docker/Dockerfile'
-      tags: 'latest'
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: 'ITADEV2-MSDataServicesAzure'
+      azureContainerRegistry: '{"loginServer":"dataservices.azurecr.io", "id" : "/subscriptions/675d7977-79af-4b94-b0bd-26d4095a4ffb/resourceGroups/ITA-MSDataServices-Dev-East1/providers/Microsoft.ContainerRegistry/registries/dataservices"}'
+      dockerComposeFile: '**/docker-compose.yml'
+      action: 'Push services'
+      additionalImageTags: '$(Build.BuildId)'
