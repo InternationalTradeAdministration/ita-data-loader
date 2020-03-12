@@ -17,6 +17,6 @@ steps:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'ITADEV2-MSDataServicesAzure'
       azureContainerRegistry: '{"loginServer":"dataservices.azurecr.io", "id" : "/subscriptions/675d7977-79af-4b94-b0bd-26d4095a4ffb/resourceGroups/ITA-MSDataServices-Dev-East1/providers/Microsoft.ContainerRegistry/registries/dataservices"}'
-      dockerComposeFile: '**/docker-compose.yml'
+      dockerComposeFile: 'docker/docker-compose.yml'
       action: 'Push services'
       additionalImageTags: '$(Build.BuildId)'
