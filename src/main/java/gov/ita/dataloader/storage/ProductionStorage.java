@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -124,18 +121,18 @@ public class ProductionStorage implements Storage {
 
   @Override
   public byte[] getBlob(String containerName, String blobName) {
-    StringBuffer sb = new StringBuffer();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     makeContainerUrl(containerName).createBlobURL(blobName)
       .download()
       .blockingGet()
       .body(new ReliableDownloadOptions())
-      .blockingForEach(b -> sb.append(new String(b.array())));
-    return sb.toString().getBytes();
+      .blockingForEach(b -> outputStream.write(b.array()));
+    return outputStream.toByteArray();
   }
 
   @Override
   public byte[] getBlob(String containerName, String blobName, String snapshot) {
-    StringBuffer sb = new StringBuffer();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     BlobURL blobURL = null;
     try {
       blobURL = (snapshot == null) ?
@@ -149,9 +146,9 @@ public class ProductionStorage implements Storage {
       .download()
       .blockingGet()
       .body(new ReliableDownloadOptions())
-      .blockingForEach(b -> sb.append(new String(b.array())));
+      .blockingForEach(b -> outputStream.write(b.array()));
 
-    return sb.toString().getBytes();
+    return outputStream.toByteArray();
   }
 
   @Override

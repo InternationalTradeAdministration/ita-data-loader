@@ -47,11 +47,7 @@ metadata:
   name: ita-dataloader
   namespace: default
   annotations:
-<<<<<<< Updated upstream
     service.beta.kubernetes.io/azure-dns-label-name: ita-dataloader-dev
-=======
-    service.beta.kubernetes.io/azure-dns-label-name: ita-dataloader-reporting-dev
->>>>>>> Stashed changes
 spec:
   ports:
   - port: 80
