@@ -63,9 +63,8 @@ Steps to run this application on you local machine for development purposes.
     - FLYWAY_PASSWORD: Password to the AZURE SQL Database
 
 ## Deployment
- - K8 deploy script ```./deploy-aks.sh```
- - Container Instance deploy script ```./deploy.sh```
- - For Azure DevOps pipeline configuration use ```azure-pipelines.yml```
+ - AKS: ```./deploy-aks.sh```
+ - For Azure DevOps pipeline configuration, update: ```azure-pipelines.yml```
  
 ## Data Factory Log Extractor
 This App Function allows us to retrieve the last known status of a given pipeline within a given data factory:
