@@ -73,7 +73,7 @@ public class IngestController {
                          @RequestParam("containerName") String containerName,
                          @RequestParam(name = "snapshot", defaultValue = "") String snapshot) {
     if (snapshot.equals("")) {
-      storage.delete(containerName, fileName, null);
+      storage.delete(containerName, fileName);
     } else {
       storage.delete(containerName, fileName, snapshot);
     }

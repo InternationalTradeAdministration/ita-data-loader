@@ -21,4 +21,7 @@ public interface Storage {
   void makeSnapshot(String containerName, String blobName);
 
   void delete(String containerName, String blobPattern, String snapshot);
+
+  void delete(String containerName, String blobPattern);
+
 }

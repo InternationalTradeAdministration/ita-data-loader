@@ -103,4 +103,9 @@ public class DevelopmentStorage implements Storage {
       }
     }
   }
+
+  @Override
+  public void delete(String containerName, String blobPattern) {
+    delete(containerName, blobPattern, null);
+  }
 }

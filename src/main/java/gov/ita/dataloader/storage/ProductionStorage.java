@@ -121,18 +121,12 @@ public class ProductionStorage implements Storage {
 
   @Override
   public byte[] getBlob(String containerName, String blobName) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    makeContainerUrl(containerName).createBlobURL(blobName)
-      .download()
-      .blockingGet()
-      .body(new ReliableDownloadOptions())
-      .blockingForEach(b -> outputStream.write(b.array()));
-    return outputStream.toByteArray();
+    BlobURL blobURL = makeContainerUrl(containerName).createBlobURL(blobName);
+    return downloadBlob(blobURL);
   }
 
   @Override
   public byte[] getBlob(String containerName, String blobName, String snapshot) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     BlobURL blobURL = null;
     try {
       blobURL = (snapshot == null) ?
@@ -142,12 +136,16 @@ public class ProductionStorage implements Storage {
       e.printStackTrace();
     }
 
+    return downloadBlob(blobURL);
+  }
+
+  private byte[] downloadBlob(BlobURL blobURL) {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     blobURL
       .download()
       .blockingGet()
       .body(new ReliableDownloadOptions())
       .blockingForEach(b -> outputStream.write(b.array()));
-
     return outputStream.toByteArray();
   }
 
@@ -158,23 +156,24 @@ public class ProductionStorage implements Storage {
 
   @Override
   public void delete(String containerName, String blobName, String snapshot) {
-    if (snapshot == null) {
-      for (BlobMetaData b : getBlobMetadata(containerName, false)) {
-        if (b.getFileName().contains(blobName)) {
-          log.info("Deleting blob: {}", b.getFileName());
-          makeServiceURL().createContainerURL(containerName).
-            createBlobURL(b.getFileName())
-            .delete(INCLUDE, null, null).blockingGet();
-        }
-      }
-    } else {
-      try {
-        log.info("Deleting blob snapshot: {} {}", blobName, snapshot);
-        makeServiceURL().createContainerURL(containerName)
-          .createBlobURL(blobName).withSnapshot(snapshot)
-          .delete().blockingGet();
-      } catch (MalformedURLException | UnknownHostException e) {
-        e.printStackTrace();
+    try {
+      log.info("Deleting blob snapshot: {} {}", blobName, snapshot);
+      makeServiceURL().createContainerURL(containerName)
+        .createBlobURL(blobName).withSnapshot(snapshot)
+        .delete().blockingGet();
+    } catch (MalformedURLException | UnknownHostException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void delete(String containerName, String blobName) {
+    for (BlobMetaData b : getBlobMetadata(containerName, false)) {
+      if (b.getFileName().contains(blobName)) {
+        log.info("Deleting blob: {}", b.getFileName());
+        makeServiceURL().createContainerURL(containerName).
+          createBlobURL(b.getFileName())
+          .delete(INCLUDE, null, null).blockingGet();
       }
     }
   }
