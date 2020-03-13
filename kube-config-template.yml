@@ -45,7 +45,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ita-dataloader
-  namespace: default
+  namespace: mdsnamespace
   annotations:
     service.beta.kubernetes.io/azure-dns-label-name: ita-dataloader-dev
 spec:
