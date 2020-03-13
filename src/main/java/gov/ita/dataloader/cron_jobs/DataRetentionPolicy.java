@@ -1,4 +1,4 @@
-package gov.ita.dataloader;
+package gov.ita.dataloader.cron_jobs;
 
 import gov.ita.dataloader.business_unit.BusinessUnitService;
 import gov.ita.dataloader.storage.BlobMetaData;
@@ -28,10 +28,10 @@ public class DataRetentionPolicy {
     this.today = today;
   }
 
-  @Scheduled(cron = "0 0 0 * * ?")
+  @Scheduled(cron = "0 1 0 * * ?")
   public void purgeExpiredData() throws Exception {
+    log.info("Executing data retention policy for container");
     businessUnitService.getStorageContainers().forEach(container -> {
-      log.info("Executing data retention policy");
       List<BlobMetaData> blobMetadata = storage.getBlobMetadata(container, true);
       blobMetadata.forEach(b -> {
         if (b.getSnapshot() != null && b.getMetadata() != null && b.getMetadata().get("pii") != null) {
