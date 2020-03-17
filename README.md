@@ -76,3 +76,27 @@ This App Function allows us to retrieve the last known status of a given pipelin
  - Flyway is used to manage the state of the database, that's all. This application does not otherwise interact with the database
  - SQL Scripts for updating the Database can be found here:  /src/main/resources/db/migration
  
+ ## Additional Notes
+  - The dataloader storage container needs to be manually updated once initially, to set users that have access to containers. See example below.
+  - Only system administrators should have access to the Dataloader container
+  - Storage containers only get created when that application is booted up (initialized)
+  - New containers need to be manually created in Azure
+  - Ex:
+  ```json
+{
+  "businessUnits": [
+    {
+      "containerName": "demo",
+      "businessName": "Demo Business Unit",
+      "users": []
+    },
+    {
+      "containerName": "dataloader",
+      "businessName": "Dataloader",
+      "users": [
+        "admin@foo.com" 
+      ]
+    }
+  ]
+}
+```

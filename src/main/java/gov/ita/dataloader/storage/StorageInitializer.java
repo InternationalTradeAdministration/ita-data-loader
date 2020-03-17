@@ -20,11 +20,12 @@ public class StorageInitializer {
   public void init() {
     List<String> newContainers = new ArrayList<>();
     newContainers.add("dataloader");
+    newContainers.add("demo");
+    newContainers.add("fta-tariff-rates");
     newContainers.add("otexa");
     newContainers.add("select-usa");
-    newContainers.add("fta-tariff-rates");
-    newContainers.add("demo");
     newContainers.add("siat");
+    newContainers.add("sima");
 
     Set<String> existingContainers = storage.getContainerNames();
 

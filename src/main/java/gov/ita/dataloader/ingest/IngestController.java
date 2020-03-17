@@ -102,7 +102,6 @@ public class IngestController {
   @GetMapping(value = "/api/container-metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<BlobMetaData> getStorageMetadata(@RequestParam("containerName") String containerName) {
     return storage.getBlobMetadata(containerName, true).stream()
-      .filter(blobMetaData -> !blobMetaData.getFileName().equals("configuration.json"))
       .filter(blobMetaData -> !blobMetaData.getFileName().startsWith("translated"))
       .map(this::handleLegacyBlobMetadata)
       .collect(Collectors.toList());
