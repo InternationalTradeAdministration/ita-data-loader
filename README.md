@@ -29,10 +29,15 @@ Steps to run this application on you local machine for development purposes.
 
 ## Azure Configuration
 **Prerequisites** 
-- Azure CLI <https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest>
-- Docker CLI <https://docs.docker.com/engine/reference/commandline/cli/>
-- KUBECTL CLI (if deploying to AKS) <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
-- An existing Azure Subscription
+* Azure CLI <https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest>
+* Docker CLI <https://docs.docker.com/engine/reference/commandline/cli/>
+* KUBECTL CLI (if deploying to AKS) <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
+* Azure Subscription
+* Azure Container Registry (ACR)
+* Azure Kubernetes Service (AKS)
+* A Static IP Address in Azure confiured with a DNS Name
+* An AKS Ingess Controller with TLS
+  * Additional documentaion: <https://docs.microsoft.com/en-us/azure/aks/ingress-static-ip>
 
 **Steps** 
 1. Log into Azure using the Azure CLI 
@@ -52,7 +57,7 @@ Steps to run this application on you local machine for development purposes.
     - az acr create --resource-group <Recource Group Name> --name <Container Name> --sku Basic
 1. From here, you may customize and use the deploy scripts to deploy this application.
 
-## Required Environment Variables
+### Required Environment Variables
     - AZURE_OAUTH_CLIENT_ID: Active Directory Client ID
     - AZURE_OAUTH_CLIENT_SECRET: Active Directory Client Secret
     - AZURE_STORAGE_ACCOUNT: Blob Storage Account
@@ -62,10 +67,22 @@ Steps to run this application on you local machine for development purposes.
     - FLYWAY_USER: Username to the AZURE SQL Database
     - FLYWAY_PASSWORD: Password to the AZURE SQL Database
 
-## Deployment
- - AKS: ```./deploy-aks.sh```
- - For Azure DevOps pipeline configuration, update: ```azure-pipelines.yml```
- 
+### Scripts & Configuration Files
+
+1. Log in with the Azure CLI: ```az login```
+1. Select the appropriate Subscription. Ex: ```az account set --subscription "Sample_Subscription"```
+1. Get credentials. Ex: ````az aks get-credentials --resource-group my-resources --name myAKS --overwrite-existing````
+1. Rename ```kube-config-template.yml``` to ```kube-config.yml``` and update it with the following:
+    - image locations
+    - namespace for each section
+    - host names in the Ingress section
+1. Update ```deploy-aks.sh``` with the appropriate Azure Container Registry and Azure Container Key
+1. Execute ```deploy-aks.sh```
+1. For Azure DevOps pipeline configuration, update: ```azure-pipelines.yml```
+
+The application will be available at the following URL: [<http://ip-dns-name.location.cloudapp.azure.com>]
+The location in the URL will be the location of the Kubernetes cluster. Ex: eastus, centralus, etc...
+
 ## Data Factory Log Extractor
 This App Function allows us to retrieve the last known status of a given pipeline within a given data factory:
     <https://github.com/InternationalTradeAdministration/ita-datafactory-log-extractor>

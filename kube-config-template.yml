@@ -1,56 +1,88 @@
-kind: Pod
-apiVersion: v1
+kind: Deployment
+apiVersion: apps/v1beta1
 metadata:
   name: ita-dataloader
+  namespace: dataloader
   labels:
     app: ita-dataloader
 spec:
-  containers:
-  - name: ita-dataloader
-    image: <azure-container-registry>.azurecr.io/ita-dataloader:latest
-    imagePullPolicy: Always
-    ports:
-    - containerPort: 80
-    env:
-      - name: AZURE_STORAGE_ACCOUNT
-        value: <azure-storage-account>
-      - name: AZURE_STORAGE_ACCOUNT_KEY
-        value: <azure-storage-account-key>
-      - name: DATAFACTORY_STATUS_URL
-        value: <datafactory-status-url>
-      - name: FLYWAY_URL
-        value: <azure-sql-database-url>
-      - name: FLYWAY_USER
-        value: <azure-sql-database-username>
-      - name: FLYWAY_PASSWORD
-        value: <azure-sql-database-password>
-      - name: TARIFF_DOCS_ACCESS_TOKEN_URL
-        value: <tariff-docs-token-url>
-      - name: TARIFF_DOCS_CLIENT_ID
-        value: <tariff-docs-client-id>
-      - name: TARIFF_DOCS_CLIENT_SECRET
-        value:  <tariff-docs-client-secret>
-      - name: TARIFF_DOCS_METADATA_URL
-        value:  <tariff-docs-meta-data-url>
-      - name: AZURE_OAUTH_CLIENT_ID
-        value: <azure-oauth-client-id>
-      - name: AZURE_OAUTH_CLIENT_SECRET
-        value: <azure-oauth-client-secret>
-      - name: AZURE_OAUTH_TENANT_ID
-        value: <azure-oauth-tenant-id>
-  restartPolicy: Always
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: ita-dataloader
+    spec:
+      containers:
+      - name: ita-dataloader
+        image: dataservices.azurecr.io/ita-dataloader:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+          - name: AZURE_STORAGE_ACCOUNT
+            value: <azure-storage-account>
+          - name: AZURE_STORAGE_ACCOUNT_KEY
+            value: <azure-storage-account-key>
+          - name: DATAFACTORY_STATUS_URL
+            value: <datafactory-status-url>
+          - name: FLYWAY_URL
+            value: <azure-sql-database-url>
+          - name: FLYWAY_USER
+            value: <azure-sql-database-username>
+          - name: FLYWAY_PASSWORD
+            value: <azure-sql-database-password>
+          - name: TARIFF_DOCS_ACCESS_TOKEN_URL
+            value: <tariff-docs-token-url>
+          - name: TARIFF_DOCS_CLIENT_ID
+            value: <tariff-docs-client-id>
+          - name: TARIFF_DOCS_CLIENT_SECRET
+            value:  <tariff-docs-client-secret>
+          - name: TARIFF_DOCS_METADATA_URL
+            value:  <tariff-docs-meta-data-url>
+          - name: AZURE_OAUTH_CLIENT_ID
+            value: <azure-oauth-client-id>
+          - name: AZURE_OAUTH_CLIENT_SECRET
+            value: <azure-oauth-client-secret>
+          - name: AZURE_OAUTH_TENANT_ID
+            value: <azure-oauth-tenant-id>
+      restartPolicy: Always
 ---
 
 kind: Service
 apiVersion: v1
 metadata:
   name: ita-dataloader
-  namespace: mdsnamespace
-  annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: ita-dataloader-dev
+  namespace: dataloader
 spec:
+  type: ClusterIP
   ports:
-  - port: 80
-  type: LoadBalancer
+    - port: 80
   selector:
     app: ita-dataloader
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: ita-dataloader
+  namespace: mdsnamespace
+spec:
+  rules:
+    - host: <ip-dns-name>.<location>.cloudapp.azure.com
+      http:
+        paths:
+          - path: /dataloader
+            backend:
+              serviceName: ita-dataloader
+              servicePort: 80
+  tls:
+    - hosts:
+        - <ip-dns-name>.<location>.cloudapp.azure.com
+      secretName: tls-secret
