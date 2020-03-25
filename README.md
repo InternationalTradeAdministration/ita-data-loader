@@ -35,9 +35,9 @@ Steps to run this application on you local machine for development purposes.
 * Azure Subscription
 * Azure Container Registry (ACR)
 * Azure Kubernetes Service (AKS)
-* A Static IP Address in Azure confiured with a DNS Name
+* A DNS Zone has been configured with a sub-domain that points to an ingress controller in AKS
 * An AKS Ingess Controller with TLS
-  * Additional documentaion: <https://docs.microsoft.com/en-us/azure/aks/ingress-static-ip>
+  * Additional documentation: <https://docs.microsoft.com/en-us/azure/aks/ingress-static-ip>
 
 **Steps** 
 1. Log into Azure using the Azure CLI 

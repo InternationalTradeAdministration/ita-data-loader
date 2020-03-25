@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
   name: ita-dataloader
-  namespace: dataloader
+  namespace: mdsnamespace
   labels:
     app: ita-dataloader
 spec:
@@ -57,11 +57,12 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ita-dataloader
-  namespace: dataloader
+  namespace: mdsnamespace
 spec:
   type: ClusterIP
   ports:
-    - port: 80
+    - name: http
+      port: 80
   selector:
     app: ita-dataloader
 ---
@@ -75,14 +76,14 @@ metadata:
   namespace: mdsnamespace
 spec:
   rules:
-    - host: <ip-dns-name>.<location>.cloudapp.azure.com
+    - host: <url>
       http:
         paths:
-          - path: /dataloader
+          - path: /
             backend:
               serviceName: ita-dataloader
               servicePort: 80
   tls:
     - hosts:
-        - <ip-dns-name>.<location>.cloudapp.azure.com
+        - <url>
       secretName: tls-secret
