@@ -3,18 +3,22 @@ package gov.ita.dataloader.datafactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Profile("development")
 public class DevelopmentDataFactoryGateway implements DataFactoryGateway {
   @Override
-  public byte[] getPipelineStatus(String pipelineName) {
-    String pipelineStatus = "{" +
-      "\"piplineName\": \"hello\", " +
-      "\"lastUpdated\": \"2019-10-12T12:00:02.321045\", " +
-      "\"durationInMs\": 123, " +
-      "\"status\": \"Succeeded\", " +
-      "\"message\": \"\" " +
-      "}";
-    return pipelineStatus.getBytes();
+  public PipelineRun getPipelineStatus(String pipelineName) {
+    return new PipelineRun(
+      "some-run-id",
+      pipelineName,
+      666,
+      "Succeeded",
+      null,
+      true,
+      LocalDateTime.now(),
+      LocalDateTime.now(),
+      LocalDateTime.now());
   }
 }

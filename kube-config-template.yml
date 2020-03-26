@@ -28,8 +28,6 @@ spec:
             value: <azure-storage-account>
           - name: AZURE_STORAGE_ACCOUNT_KEY
             value: <azure-storage-account-key>
-          - name: DATAFACTORY_STATUS_URL
-            value: <datafactory-status-url>
           - name: FLYWAY_URL
             value: <azure-sql-database-url>
           - name: FLYWAY_USER
@@ -50,6 +48,19 @@ spec:
             value: <azure-oauth-client-secret>
           - name: AZURE_OAUTH_TENANT_ID
             value: <azure-oauth-tenant-id>
+          - name: DATAFACTORY_CLIENT_ID
+            value: <azure-datafactory-client-id>
+          - name: DATAFACTORY_CLIENT_SECRET
+            value: <azure-datafactory-client-secret>
+          - name: DATAFACTORY_NAME
+            value: <azure-datafactory-name>
+          - name: DATAFACTORY_RESOURCE_GROUP
+            value: <azure-datafactory-resource-group>
+          - name: AZURE_SUBSCRIPTION_ID
+            value: <azure-datafactory-tenant-id>
+          - name: AZURE_TENANT_ID
+            value: <azure-datafactory-tenant-id>
+
       restartPolicy: Always
 ---
 

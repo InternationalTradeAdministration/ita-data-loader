@@ -13,8 +13,7 @@ public class DataFactoryController {
   private DataFactoryGateway dataFactoryGateway;
 
   @GetMapping(value = "/api/data-factory/pipeline-status", produces = MediaType.APPLICATION_JSON_VALUE)
-  public byte[] getPipelineStatus(@RequestParam("pipelineName") String pipelineName) {
+  public PipelineRun getPipelineStatus(@RequestParam("pipelineName") String pipelineName) {
     return dataFactoryGateway.getPipelineStatus(pipelineName);
   }
-
 }

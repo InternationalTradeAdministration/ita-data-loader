@@ -79,7 +79,7 @@ export default class Repository {
         pipelineName
       }
     })
-    return pipelineStatusResponse.data
+    return pipelineStatusResponse.data ? pipelineStatusResponse.data : null
   }
 
   async _getManualIngestStatus (containerName) {

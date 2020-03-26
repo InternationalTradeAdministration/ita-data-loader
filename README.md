@@ -52,7 +52,6 @@ Steps to run this application on you local machine for development purposes.
 1. Create a Data Factory using the Azure Portal (<https://portal.azure.com>) and deploy the configuration using this Git repository: <https://github.com/InternationalTradeAdministration/ita-datafactory-config>
 1. Create an App Registration for the Data Factory with the Contributor Role
    - a sample manifest is located here: /manifests/sample-data-factory-app-registration.json
-1. Deploy ITA Data Factory Log Extractor (see section below)
 1. Create a Container Registry
     - az acr create --resource-group <Recource Group Name> --name <Container Name> --sku Basic
 1. From here, you may customize and use the deploy scripts to deploy this application.
@@ -62,10 +61,15 @@ Steps to run this application on you local machine for development purposes.
     - AZURE_OAUTH_CLIENT_SECRET: Active Directory Client Secret
     - AZURE_STORAGE_ACCOUNT: Blob Storage Account
     - AZURE_STORAGE_ACCOUNT_KEY: Blob Storage Account Key
-    - DATAFACTORY_STATUS_URL: The URL to this ITA Data Factory Log Extractor - App Function
     - FLYWAY_URL: The jdbc connection to a AZURE SQL Database
     - FLYWAY_USER: Username to the AZURE SQL Database
     - FLYWAY_PASSWORD: Password to the AZURE SQL Database
+    - DATAFACTORY_CLIENT_ID: Client ID for the data facotry App Registration
+    - DATAFACTORY_CLIENT_SECRET: Client Secret for the data facotry App Registration
+    - DATAFACTORY_NAME: The name of the data factory
+    - DATAFACTORY_RESOURCE_GROUP: The resource group for the data factory
+    - AZURE_TENANT_ID: The Azure tenant id the datafactory is in
+    - AZURE_SUBSCRIPTION_ID: The Azure subscription id the datafactory is in
 
 ### Scripts & Configuration Files
 
@@ -82,12 +86,6 @@ Steps to run this application on you local machine for development purposes.
 
 The application will be available at the following URL: [<http://ip-dns-name.location.cloudapp.azure.com>]
 The location in the URL will be the location of the Kubernetes cluster. Ex: eastus, centralus, etc...
-
-## Data Factory Log Extractor
-This App Function allows us to retrieve the last known status of a given pipeline within a given data factory:
-    <https://github.com/InternationalTradeAdministration/ita-datafactory-log-extractor>
- - Data factory pipelines and storage containers must have the same name to retrieve the pipeline status
- - Deploying this project will result in a URL to perform HTTP requests, use that URL when populating the DATAFACTORY_STATUS_URL environment variable
 
 ## Database Notes
  - Flyway is used to manage the state of the database, that's all. This application does not otherwise interact with the database

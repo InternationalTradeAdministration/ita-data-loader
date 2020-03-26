@@ -28,12 +28,17 @@ spring:
 storage-params:
   azure-storage-account: ${AZURE_STORAGE_ACCOUNT}
   azure-storage-account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
-datafactory-status-url: ${DATAFACTORY_STATUS_URL}
+datafactory:
+  client-id: ${DATAFACTORY_CLIENT_ID}
+  client-secret: ${DATAFACTORY_CLIENT_SECRET}
+  name: ${DATAFACTORY_NAME}
+  resource-group: ${DATAFACTORY_RESOURCE_GROUP}
 tariff-docs:
-  access-token-url: ${TARIFF_DOCS_ACCESS_TOKEN_URL}
   client-id: ${TARIFF_DOCS_CLIENT_ID}
   client-secret: ${TARIFF_DOCS_CLIENT_SECRET}
   metadata-url: ${TARIFF_DOCS_METADATA_URL}
+azure-tenant-id: ${AZURE_TENANT_ID}
+azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}
 
 ---
 spring:
@@ -60,9 +65,14 @@ azure:
 storage-params:
   azure-storage-account: ${AZURE_STORAGE_ACCOUNT}
   azure-storage-account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
-datafactory-status-url: ${DATAFACTORY_STATUS_URL}
+datafactory:
+  client-id: ${DATAFACTORY_CLIENT_ID}
+  client-secret: ${DATAFACTORY_CLIENT_SECRET}
+  name: ${DATAFACTORY_NAME}
+  resource-group: ${DATAFACTORY_RESOURCE_GROUP}
 tariff-docs:
-  access-token-url: ${TARIFF_DOCS_ACCESS_TOKEN_URL}
   client-id: ${TARIFF_DOCS_CLIENT_ID}
   client-secret: ${TARIFF_DOCS_CLIENT_SECRET}
   metadata-url: ${TARIFF_DOCS_METADATA_URL}
+azure-tenant-id: ${AZURE_TENANT_ID}
+azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}

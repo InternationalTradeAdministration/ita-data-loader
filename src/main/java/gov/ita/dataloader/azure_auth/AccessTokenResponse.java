@@ -1,4 +1,4 @@
-package gov.ita.dataloader.extract.fta.tariff;
+package gov.ita.dataloader.azure_auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
