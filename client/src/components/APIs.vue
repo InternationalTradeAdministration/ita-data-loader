@@ -23,12 +23,6 @@
             <li>$metadata.user_upload (string): Either "true" or "false"; signifies whether a file was uploaded by a user, or ingested from the configuration.</li>
           </ul>
         </section>
-        <section>
-          <h1 class="md-title">FTA Tariff Rates</h1>
-          <p>/api/extract/fta/tariff-rates?fileName=$fileName</p>
-          <p>$fileName (string): Any file name from the fta-tariff-rates storage container</p>
-          <p>Returns tariff rates for the given file with Rules of Origin applied</p>
-        </section>
       </div>
     </div>
   </div>

@@ -33,10 +33,6 @@ datafactory:
   client-secret: ${DATAFACTORY_CLIENT_SECRET}
   name: ${DATAFACTORY_NAME}
   resource-group: ${DATAFACTORY_RESOURCE_GROUP}
-tariff-docs:
-  client-id: ${TARIFF_DOCS_CLIENT_ID}
-  client-secret: ${TARIFF_DOCS_CLIENT_SECRET}
-  metadata-url: ${TARIFF_DOCS_METADATA_URL}
 azure-tenant-id: ${AZURE_TENANT_ID}
 azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}
 
@@ -70,9 +66,5 @@ datafactory:
   client-secret: ${DATAFACTORY_CLIENT_SECRET}
   name: ${DATAFACTORY_NAME}
   resource-group: ${DATAFACTORY_RESOURCE_GROUP}
-tariff-docs:
-  client-id: ${TARIFF_DOCS_CLIENT_ID}
-  client-secret: ${TARIFF_DOCS_CLIENT_SECRET}
-  metadata-url: ${TARIFF_DOCS_METADATA_URL}
 azure-tenant-id: ${AZURE_TENANT_ID}
 azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}

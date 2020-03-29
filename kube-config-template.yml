@@ -34,14 +34,6 @@ spec:
             value: <azure-sql-database-username>
           - name: FLYWAY_PASSWORD
             value: <azure-sql-database-password>
-          - name: TARIFF_DOCS_ACCESS_TOKEN_URL
-            value: <tariff-docs-token-url>
-          - name: TARIFF_DOCS_CLIENT_ID
-            value: <tariff-docs-client-id>
-          - name: TARIFF_DOCS_CLIENT_SECRET
-            value:  <tariff-docs-client-secret>
-          - name: TARIFF_DOCS_METADATA_URL
-            value:  <tariff-docs-meta-data-url>
           - name: AZURE_OAUTH_CLIENT_ID
             value: <azure-oauth-client-id>
           - name: AZURE_OAUTH_CLIENT_SECRET
