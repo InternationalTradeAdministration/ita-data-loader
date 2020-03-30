@@ -8,11 +8,11 @@ import java.io.StringWriter;
 
 public class SimaCensusCsvTranslator implements Translator {
 
-  StringWriter stringWriter = new StringWriter();
-  CSVPrinter csvPrinter;
-
   @Override
   public byte[] translate(byte[] bytes) {
+    StringWriter stringWriter = new StringWriter();
+    CSVPrinter csvPrinter;
+
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
         .withHeader(

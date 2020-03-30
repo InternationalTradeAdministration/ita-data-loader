@@ -59,7 +59,7 @@ public class TranslationProcessor {
     if (translator != null) {
       log.info("Processing {}", containerFileCompositeKey);
       ingestProcessorStatus.setPhase(DELETING_OLD_TRANSLATIONS);
-      storage.delete(containerName, fileRootName, null);
+      storage.delete(containerName, fileRootName);
 
       ingestProcessorStatus.setPhase(CREATING_NEW_TRANSLATIONS);
       if (translator.type().equals(TranslatorType.CSV) && translator.pageSize() != -1) {
