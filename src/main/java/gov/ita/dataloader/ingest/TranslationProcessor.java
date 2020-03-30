@@ -12,56 +12,39 @@ import java.io.*;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import static gov.ita.dataloader.ingest.Phase.*;
-
 @Slf4j
 @Service
 public class TranslationProcessor {
 
   private Storage storage;
   private TranslatorFactory translatorFactory;
-  private ProcessorStatusService processorStatusService;
 
-  public TranslationProcessor(Storage storage, TranslatorFactory translatorFactory, ProcessorStatusService processorStatusService) {
+  public TranslationProcessor(Storage storage, TranslatorFactory translatorFactory) {
     this.storage = storage;
     this.translatorFactory = translatorFactory;
-    this.processorStatusService = processorStatusService;
   }
 
   @Async
-  public CompletableFuture<Void> initProcessing(String containerName, String fileName, byte[] fileBytes, String userName) {
-    if (!processorStatusService.isProcessing(containerName, fileName)) {
-      ManualIngestTranslationStatus ingestProcessorStatus = new ManualIngestTranslationStatus(fileName, -1, 0, CREATING_NEW_TRANSLATIONS);
-      processorStatusService.updateTranslationProcessorStatus(containerName, fileName, ingestProcessorStatus);
-      process(containerName, fileName, fileBytes, ingestProcessorStatus);
-      ingestProcessorStatus.setPhase(DONE);
-    }
-    return new CompletableFuture<>();
+  public CompletableFuture<String> initProcessing(String containerName, String fileName, byte[] fileBytes, String userName) {
+    return process(containerName, fileName, fileBytes);
   }
 
   @Async
-  public CompletableFuture<Void> reProcess(String containerName, String fileName) {
+  public CompletableFuture<String> reProcess(String containerName, String fileName) {
     byte[] fileBytes = storage.getBlob(containerName, fileName);
-    ManualIngestTranslationStatus ingestProcessorStatus = new ManualIngestTranslationStatus(fileName, -1, 0, CREATING_NEW_TRANSLATIONS);
-    processorStatusService.updateTranslationProcessorStatus(containerName, fileName, ingestProcessorStatus);
-    process(containerName, fileName, fileBytes, ingestProcessorStatus);
-    return new CompletableFuture<>();
+    return process(containerName, fileName, fileBytes);
   }
 
   @Async
-  private void process(String containerName, String fileName, byte[] fileBytes, ManualIngestTranslationStatus ingestProcessorStatus) {
+  private CompletableFuture<String> process(String containerName, String fileName, byte[] fileBytes) {
     String containerFileCompositeKey = containerName + "#" + fileName;
     String fileRootName = "translated/" + fileName;
-
-    processorStatusService.updateTranslationProcessorStatus(containerName, fileName, ingestProcessorStatus);
 
     Translator translator = translatorFactory.getTranslator(containerFileCompositeKey);
     if (translator != null) {
       log.info("Processing {}", containerFileCompositeKey);
-      ingestProcessorStatus.setPhase(DELETING_OLD_TRANSLATIONS);
       storage.delete(containerName, fileRootName);
 
-      ingestProcessorStatus.setPhase(CREATING_NEW_TRANSLATIONS);
       if (translator.type().equals(TranslatorType.CSV) && translator.pageSize() != -1) {
         int lineCount = countLines(fileBytes);
         int pageSize = translator.pageSize();
@@ -69,12 +52,8 @@ public class TranslationProcessor {
         int totalPages = (lineCount + pageSize - 1) / pageSize;
         int currentPage = 0;
 
-        ingestProcessorStatus.setTotalPages(totalPages);
-        ingestProcessorStatus.setCurrentPage(currentPage);
-
         while (currentPage < totalPages) {
           log.info("Translating page {} of {} for {}", currentPage + 1, totalPages, containerFileCompositeKey);
-          ingestProcessorStatus.setCurrentPage(currentPage + 1);
           int offset = currentPage * pageSize;
           byte[] partitionedBytes = getFilePartition(fileBytes, offset, pageSize);
           byte[] translatedBytes = translator.translate(partitionedBytes);
@@ -87,7 +66,7 @@ public class TranslationProcessor {
         storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true, false);
       }
     }
-    ingestProcessorStatus.setPhase(DONE);
+    return CompletableFuture.completedFuture("complete");
   }
 
   private byte[] getFilePartition(byte[] bytes, int offset, int size) {

@@ -29,15 +29,11 @@
           </div>
           <div class="md-layout-item md-size-10">
             <md-button
-              v-if="!ingesting"
               class="md-primary md-raised top-btn"
               @click="startIngestProcess()"
             >
               <label>Ingest</label>
             </md-button>
-            <div v-if="ingesting" class="spinner">
-              <md-progress-spinner md-mode="indeterminate" :md-diameter="30"></md-progress-spinner>
-            </div>
           </div>
         </div>
         <div class="md-layout md-gutter">
@@ -55,7 +51,7 @@
             />
             <md-dialog-alert
               :md-active.sync="ingestClicked"
-              md-content="The ingest process was started successfully! To view its progress, see the log."
+              :md-content="ingestMessage"
               md-confirm-text="Close"
             />
           </div>
@@ -111,17 +107,21 @@ export default {
       dataloaderConfig: {},
       configSaved: false,
       ingestClicked: false,
-      ingesting: false,
+      ingestMessage: null,
       editing: false,
       dataloaderConfigBeautified: null
     };
   },
   methods: {
     async startIngestProcess() {
-      this.ingesting = true;
       this.ingestClicked = true;
-      await this.repository._startIngestProcess(this.containerName);
-      this.ingesting = false;
+      const status = await this.repository._startIngestProcess(this.containerName);
+      if (status === 'started') {
+        this.ingestMessage = 'The ingest process was started successfully! To view its progress, see the log.'
+      }
+      if (status === 'running') {
+        this.ingestMessage = 'The ingest process is currently running! To view its progress, see the log.'
+      }
     },
     async saveConfiguration() {
       this.dataloaderConfig = JSON.parse(this.dataloaderConfigBeautified);

@@ -7,9 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-class ManualIngestProcessorStatus {
-  Integer datasetsQueued;
-  Integer datasetsCompleted;
-  boolean ingesting;
-  List<LogItem> log;
+public class ProcessorStatus {
+  Boolean isDone;
+  List<LogItem> logItems;
 }

@@ -1,7 +1,7 @@
 <template>
   <md-toolbar class="md-primary md-dense dataloader-toolbar">
     <div style="flex: 1; display: flex">
-      <h3 class="md-title dataloader-title">ITA Dataloader</h3>
+      <h3 class="md-title dataloader-title">Dataloader</h3>
       <div v-if="businessUnits && businessUnits.length > 1" class="business-unit-dropdown">
         <select v-model="containerName" @change="updateBusinessUnitContent($event)">
           <option

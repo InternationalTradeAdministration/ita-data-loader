@@ -29,8 +29,6 @@ public class AutomatedIngestProcessorTest {
   @Mock
   private TranslationProcessor translationProcessor;
   @Mock
-  private ProcessorStatusService processorStatusService;
-  @Mock
   private Storage storage;
 
   private List<DataSetConfig> dataSetConfigs;
@@ -46,7 +44,6 @@ public class AutomatedIngestProcessorTest {
     when(httpHelper.getBytes("http://very-cool.io")).thenReturn(VERY_RAD_BYTES);
     when(httpHelper.getBytes("http://really-cool.io")).thenReturn(REALLY_RAD_BYTES);
     when(httpHelper.getBytes("http://vangos-zip.io")).thenReturn(ZIP_FILE_BYTES);
-    when(processorStatusService.isIngesting("a-container")).thenReturn(false);
     dataSetConfigs = new ArrayList<>();
   }
 
@@ -56,7 +53,7 @@ public class AutomatedIngestProcessorTest {
     dataSetConfigs.add(new DataSetConfig("http://very-cool.io", true, "very-rad.csv", null, null));
     dataSetConfigs.add(new DataSetConfig("http://really-cool.io", true, "really-rad.csv", null, null));
 
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(null, httpHelper, translationProcessor, processorStatusService, storage);
+    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(null, httpHelper, translationProcessor, storage);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(storage, times(1))
@@ -82,22 +79,6 @@ public class AutomatedIngestProcessorTest {
   }
 
   @Test
-  public void skipsIngestProcessWhenAlreadyInProgress() {
-    when(processorStatusService.isIngesting("a-container")).thenReturn(true);
-    dataSetConfigs.add(new DataSetConfig("http://cool.io", true, "rad.csv", null, null));
-
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(null, httpHelper, translationProcessor, processorStatusService, storage);
-    automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
-
-    verify(storage, times(0))
-      .save("rad.csv", RAD_BYTES, "TestUser@gmail.com", "a-container", false, false);
-    verify(storage, times(0))
-      .makeSnapshot("a-container", "rad.csv");
-    verify(translationProcessor, times(0))
-      .initProcessing("a-container", "rad.csv", RAD_BYTES, "TestUser@gmail.com");
-  }
-
-  @Test
   public void processDataSetConfigWithReplaceValues() throws Exception {
     List<ReplaceValue> replaceValues = new ArrayList<>();
     replaceValues.add(new ReplaceValue("baseball", "football"));
@@ -105,7 +86,7 @@ public class AutomatedIngestProcessorTest {
 
     when(httpHelper.getBytes("http://vango.io")).thenReturn("The best sport is baseball!".getBytes());
 
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(null, httpHelper, translationProcessor, processorStatusService, storage);
+    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(null, httpHelper, translationProcessor, storage);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(storage, times(1))
@@ -134,7 +115,7 @@ public class AutomatedIngestProcessorTest {
 
     when(zipFileExtractor.extract(ZIP_FILE_BYTES)).thenReturn(zipFileContents);
 
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, processorStatusService, storage);
+    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, storage);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))
@@ -160,7 +141,7 @@ public class AutomatedIngestProcessorTest {
 
     when(zipFileExtractor.extract(ZIP_FILE_BYTES)).thenReturn(zipFileContents);
 
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, processorStatusService, storage);
+    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, storage);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))
@@ -173,7 +154,7 @@ public class AutomatedIngestProcessorTest {
   public void sendFilesThroughIngestTranslationProcessor() {
     dataSetConfigs.add(new DataSetConfig("http://cool.io", true, "rad.csv", null, null));
 
-    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, processorStatusService, storage);
+    AutomatedIngestProcessor automatedIngestProcessor = new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, storage);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))

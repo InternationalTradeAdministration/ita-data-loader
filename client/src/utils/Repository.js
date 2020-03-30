@@ -61,7 +61,7 @@ export default class Repository {
       }
     })
 
-    return ingestProcessResponse
+    return ingestProcessResponse.data
   }
 
   async _getIngestStatus (containerName) {
@@ -73,6 +73,22 @@ export default class Repository {
     return ingestStatusResponse.data
   }
 
+  _clearIngestStatus (containerName) {
+    axios.get('/api/automated-ingest/log/clear', {
+      params: {
+        containerName
+      }
+    })
+  }
+
+  _stopIngestProcess (containerName) {
+    axios.get('/api/automated-ingest/stop', {
+      params: {
+        containerName
+      }
+    })
+  }
+
   async _getPipelineStatus (pipelineName) {
     let pipelineStatusResponse = await axios.get('/api/data-factory/pipeline-status', {
       params: {
@@ -80,15 +96,6 @@ export default class Repository {
       }
     })
     return pipelineStatusResponse.data ? pipelineStatusResponse.data : null
-  }
-
-  async _getManualIngestStatus (containerName) {
-    let uploadStatus = await axios.get('/api/manual-ingest/status', {
-      params: {
-        containerName
-      }
-    })
-    return uploadStatus.data
   }
 
   async _deleteBlob (containerName, fileName, snapshot) {

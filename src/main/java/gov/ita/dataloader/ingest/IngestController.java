@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,6 +30,7 @@ public class IngestController {
   private AuthenticationFacade authenticationFacade;
   private ObjectMapper objectMapper;
   private TranslationProcessor translationProcessor;
+  private Map<String, CompletableFuture> processes = new HashMap<>();
 
   public IngestController(Storage storage,
                           AutomatedIngestProcessor automatedIngestProcessor,
@@ -49,12 +51,34 @@ public class IngestController {
 
   //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
   @GetMapping("/api/ingest")
-  public void startIngestProcess(@RequestParam("containerName") String containerName) {
-    automatedIngestProcessor.process(
+  public String startIngestProcess(@RequestParam("containerName") String containerName) {
+    if (processes.get(containerName) != null && !processes.get(containerName).isDone())
+      return "running";
+    CompletableFuture<String> process = automatedIngestProcessor.process(
       getDataloaderConfig(containerName).getDataSetConfigs(),
       containerName,
       authenticationFacade.getUserName(),
       5000);
+    processes.put(containerName, process);
+    return "started";
+  }
+
+  @GetMapping(value = "/api/automated-ingest/status", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ProcessorStatus getAutomatedIngestStatus(@RequestParam("containerName") String containerName) {
+    return new ProcessorStatus(
+      processes.get(containerName) != null ? processes.get(containerName).isDone() : null,
+      automatedIngestProcessor.getLog(containerName)
+    );
+  }
+
+  @GetMapping("/api/automated-ingest/log/clear")
+  public void clearAutomatedIngestLog(@RequestParam("containerName") String containerName) {
+    automatedIngestProcessor.clearLog(containerName);
+  }
+
+  @GetMapping(value = "/api/automated-ingest/stop", produces = MediaType.APPLICATION_JSON_VALUE)
+  public void stopAutomatedIngest(@RequestParam("containerName") String containerName) {
+    automatedIngestProcessor.stopProcessing(containerName);
   }
 
   //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")

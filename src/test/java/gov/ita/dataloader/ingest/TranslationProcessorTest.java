@@ -12,7 +12,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TranslationProcessorTest {
@@ -25,8 +26,6 @@ public class TranslationProcessorTest {
 
   @Mock
   Translator translator;
-
-  private ProcessorStatusService processorStatusService = new ProcessorStatusService();
 
   private TestHelpers h = new TestHelpers();
 
@@ -48,28 +47,13 @@ public class TranslationProcessorTest {
     when(translator.translate(secondPartition)).thenReturn(SECOND_TRANSLATED_BYTES);
     when(translator.translate(thirdPartition)).thenReturn(THIRD_TRANSLATED_BYTES);
 
-    TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory, processorStatusService);
+    TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory);
     translationProcessor.initProcessing("some-container", "some-file-name.csv", wholeFile, "TestUser@gmail.com");
 
     verify(storage).delete("some-container", "translated/some-file-name.csv");
     verify(storage).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
     verify(storage).save(anyString(), eq(SECOND_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
     verify(storage).save(anyString(), eq(THIRD_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));
-  }
-
-  @Test
-  public void skipsProcessingWhenAlreadyInProgress() {
-    ManualIngestTranslationStatus status = new ManualIngestTranslationStatus("some-file-name.csv", 2, 1, Phase.CREATING_NEW_TRANSLATIONS);
-    processorStatusService.updateTranslationProcessorStatus("some-container", "some-file-name.csv", status);
-
-    byte[] FIRST_TRANSLATED_BYTES = "first".getBytes();
-    byte[] wholeFile = "HEADER RECORD\r\nFIRST ROW\r\nSECOND ROW\r\nTHIRD ROW\r\nFOURTH ROW\r\nFIFTH ROW".getBytes();
-
-    TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory, processorStatusService);
-    translationProcessor.initProcessing("some-container", "some-file-name.csv", wholeFile, "TestUser@gmail.com");
-
-    verify(storage, never()).delete("some-container", "translated/some-file-name.csv", null);
-    verify(storage, never()).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("TestUser@gmail.com"), eq("some-container"), eq(true), eq(false));
   }
 
 }

@@ -9,55 +9,44 @@
     <div class="content">
       <dataloader-menu :containerName="containerName" />
       <div class="sub-content">
-        <div class="ingest-stats">
-          <span class="stat">
-            <strong>INGESTING:</strong>
-            <span>{{injestStatus.ingesting}}</span>
-          </span>
-          <span class="stat">
-            <strong>QUEUED:</strong>
-            <span>{{injestStatus.datasetsQueued}}</span>
-          </span>
-          <span class="stat">
-            <strong>COMPLETED:</strong>
-            <span>{{injestStatus.datasetsCompleted}}</span>
-          </span>
-          <md-button class="md-dense refresh-btn" @click="refreshLog()">Refresh</md-button>
+        <div class="md-layout md-gutter">
+          <div class="md-layout-item md-size-70">
+            <strong>STATUS:</strong>
+            <span v-if="injestStatus.isDone === null">n/a</span>
+            <span v-else-if="injestStatus.isDone === true">Complete</span>
+            <span v-else-if="injestStatus.isDone === false">Processing</span>
+          </div>
+          <div class="md-layout-item md-size-10">
+            <md-button class="md-dense top-btn md-raised md-accent" @click="stopIngest()">Stop</md-button>
+          </div>
+          <div class="md-layout-item md-size-10">
+            <md-button class="md-secondary md-raised top-btn" @click="clearLog()">Clear</md-button>
+          </div>
+          <div class="md-layout-item md-size-10">
+            <md-button class="md-primary md-raised top-btn" @click="refreshLog()">Refresh</md-button>
+          </div>
         </div>
-
-        <div class="log-details">
-          <md-table
-            v-if="injestStatus.log"
-            v-model="injestStatus.log"
-            md-sort="time"
-            md-sort-order="asc"
-          >
-            <md-table-row slot-scope="{ item }" slot="md-table-row">
-              <md-table-cell md-label="Timestamp">{{item.time}}</md-table-cell>
-              <md-table-cell md-label="Message">{{item.message}}</md-table-cell>
-            </md-table-row>
-          </md-table>
-        </div>
-
-        <div v-if="loading" class="loading">
-          <md-progress-bar md-mode="indeterminate"></md-progress-bar>
-        </div>
+        <md-table
+          v-if="injestStatus.logItems"
+          v-model="injestStatus.logItems"
+          md-sort="time"
+          md-sort-order="asc"
+        >
+          <md-table-row slot-scope="{ item }" slot="md-table-row">
+            <md-table-cell md-label="Timestamp" md-sort-by="time">{{item.time}}</md-table-cell>
+            <md-table-cell md-label="Message">{{item.message}}</md-table-cell>
+          </md-table-row>
+        </md-table>
+      </div>
+      <div v-if="loading" class="loading">
+        <md-progress-bar md-mode="indeterminate"></md-progress-bar>
       </div>
     </div>
   </div>
 </template>
 <style>
-.ingest-stats {
-  margin-top: 15px;
-}
-
-.log-details {
-  margin-top: 10px;
-  margin-left: 20px;
-}
-
-.md-table-cell {
-  white-space: nowrap;
+.status {
+  width: 162px;
 }
 </style>
 <script>
@@ -93,12 +82,18 @@ export default {
       );
       this.loading = false;
     },
+    clearLog() {
+      this.repository._clearIngestStatus(this.containerName);
+      this.injestStatus.isDone = null;
+      this.injestStatus.logItems = [];
+    },
+    stopIngest() {
+      this.repository._stopIngestProcess(this.containerName);
+    },
     defaultInjectStatus() {
       return {
-        processing: false,
-        totalUrlCallsQueued: 0,
-        processedUrlCalls: 0,
-        log: []
+        isDone: null,
+        logItems: []
       };
     },
     async updateBusinessUnitContent() {
@@ -117,7 +112,7 @@ export default {
     async updateContainer(containerName) {
       this.containerName = containerName;
       await this.updateBusinessUnitContent();
-      this.$forceUpdate()
+      this.$forceUpdate();
     }
   }
 };

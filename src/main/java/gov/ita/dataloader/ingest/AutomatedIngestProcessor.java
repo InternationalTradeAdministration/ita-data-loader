@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,39 +25,40 @@ public class AutomatedIngestProcessor {
   private ZipFileExtractor zipFileExtractor;
   private HttpHelper httpHelper;
   private TranslationProcessor translationProcessor;
-  private ProcessorStatusService processorStatusService;
   private Storage storage;
+  private Map<String, List<LogItem>> logItems = new HashMap<>();
+  private Map<String, Boolean> stopProcessing = new HashMap<>();
 
   public AutomatedIngestProcessor(ZipFileExtractor zipFileExtractor,
                                   HttpHelper httpHelper,
                                   TranslationProcessor translationProcessor,
-                                  ProcessorStatusService processorStatusService,
                                   Storage storage) {
     this.zipFileExtractor = zipFileExtractor;
     this.httpHelper = httpHelper;
     this.translationProcessor = translationProcessor;
-    this.processorStatusService = processorStatusService;
     this.storage = storage;
   }
 
   @Async
-  public CompletableFuture<Void> process(List<DataSetConfig> dataSourceConfigs, String containerName, String userName, long sleepMs) {
+  public CompletableFuture<String> process(List<DataSetConfig> dataSourceConfigs, String containerName, String userName, long sleepMs) {
     log.info("Starting ingest process for container: {}", containerName);
     List<DataSetConfig> enabledConfigs = dataSourceConfigs.stream().filter(DataSetConfig::isEnabled).collect(Collectors.toList());
-    ManualIngestProcessorStatus manualIngestProcessorStatus = initializeStatus(containerName, enabledConfigs.size());
 
-    if (processorStatusService.isIngesting(containerName)) return new CompletableFuture<>();
+    int totalApiCalls = enabledConfigs.size();
+    int completedApiCalls = 0;
 
     byte[] fileBytes;
     try {
       for (DataSetConfig dsc : enabledConfigs) {
         log.info("Importing file {} from {} to container {}", dsc.getFileName(), dsc.getUrl(), containerName);
 
+        updateLog(containerName, String.format("Retrieving data from: %s", dsc.getUrl()));
         fileBytes = httpHelper.getBytes(dsc.getUrl());
 
         processDataSource(dsc.getFileName(), fileBytes, dsc.getReplaceValues(), null, containerName, userName);
 
         if (dsc.getZipFileConfigs() != null) {
+          updateLog(containerName, String.format("Processing zip file: %s", dsc.getUrl()));
           Map<String, ByteArrayOutputStream> fileMap;
           try {
             fileMap = zipFileExtractor.extract(fileBytes);
@@ -76,38 +78,36 @@ public class AutomatedIngestProcessor {
               fileMap.get(fileNameKey).toByteArray(),
               zipFileConfig.getReplaceValues(),
               zipFileConfig.getSkipLineCount(),
-              containerName, userName);
+              containerName,
+              userName);
           });
         }
 
-        updateStatus(dsc, manualIngestProcessorStatus);
+        completedApiCalls++;
+
+        if (stopProcessing.getOrDefault(containerName, false)) {
+          log.info("Ingest process cancelled for container: {}", containerName);
+          updateLog(containerName, "Process cancelled");
+          return CompletableFuture.completedFuture("cancelled");
+        }
 
         try {
           Thread.sleep(sleepMs);
         } catch (InterruptedException e) {
-          manualIngestProcessorStatus.getLog().add(new LogItem(e.getMessage()));
+          updateLog(containerName, String.format("Error: %s", e.getMessage()));
+          return CompletableFuture.completedFuture("error");
         }
       }
     } catch (Exception e) {
-      manualIngestProcessorStatus.getLog().add(new LogItem(e.getMessage()));
+      updateLog(containerName, String.format("Error: %s", e.getMessage()));
+      return CompletableFuture.completedFuture("error");
     } finally {
-      manualIngestProcessorStatus.getLog().add(new LogItem("Ingest process complete"));
-      manualIngestProcessorStatus.setIngesting(false);
       log.info("Ingest process complete for container: {}", containerName);
+      updateLog(containerName, String.format("Process complete; ingested (%s of %s)", completedApiCalls, totalApiCalls));
+      stopProcessing.put(containerName, false);
     }
 
-    return new CompletableFuture<>();
-  }
-
-  private ManualIngestProcessorStatus initializeStatus(String containerName, int totalApiCalls) {
-    ManualIngestProcessorStatus ips = new ManualIngestProcessorStatus(totalApiCalls, 0, false, new ArrayList<>());
-    processorStatusService.updateIngestProcessorStatus(containerName, ips);
-    return ips;
-  }
-
-  private void updateStatus(DataSetConfig dataSetConfig, ManualIngestProcessorStatus manualIngestProcessorStatus) {
-    manualIngestProcessorStatus.setDatasetsCompleted(manualIngestProcessorStatus.getDatasetsCompleted() + 1);
-    manualIngestProcessorStatus.getLog().add(new LogItem(String.format("Completed ingest of URL: %s", dataSetConfig.getUrl())));
+    return CompletableFuture.completedFuture("complete");
   }
 
   private byte[] replace(byte[] fileBytes, String replace, String with) {
@@ -130,6 +130,7 @@ public class AutomatedIngestProcessor {
       }
     }
 
+    updateLog(containerName, String.format("Saving %s", fileName));
     storage.save(fileName, fileBytes, userName, containerName, false, false);
     storage.makeSnapshot(containerName, fileName);
     translationProcessor.initProcessing(containerName, fileName, fileBytes, userName);
@@ -168,4 +169,26 @@ public class AutomatedIngestProcessor {
     return out.toString().getBytes();
   }
 
+  public List<LogItem> getLog(String containerName) {
+    return logItems.get(containerName);
+  }
+
+  public void clearLog(String containerName) {
+    logItems.get(containerName).clear();
+  }
+
+  private void updateLog(String containerName, String message) {
+    List<LogItem> tmpLogItems = this.logItems.get(containerName);
+    if (tmpLogItems != null) {
+      tmpLogItems.add(new LogItem(message));
+    } else {
+      tmpLogItems = new ArrayList<>();
+      tmpLogItems.add(new LogItem(message));
+      this.logItems.put(containerName, tmpLogItems);
+    }
+  }
+
+  public void stopProcessing(String containerName) {
+    stopProcessing.put(containerName, true);
+  }
 }
