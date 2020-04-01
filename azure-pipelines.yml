@@ -9,9 +9,9 @@ steps:
     inputs:
       gradleWrapperFile: 'gradlew'
       tasks: 'build test'
-#  - script: |
-#      ./build.sh
-#    displayName: 'Build project artifacts'
+  - script: |
+      ./build.sh
+    displayName: 'Build project artifacts'
 #  - task: DockerCompose@0
 #    inputs:
 #      containerregistrytype: 'Azure Container Registry'
