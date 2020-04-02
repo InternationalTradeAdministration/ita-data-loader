@@ -22,6 +22,7 @@ public class StorageInitializer {
     newContainers.add("dataloader");
     newContainers.add("demo");
     newContainers.add("fta-tariff-rates");
+    newContainers.add("i92");
     newContainers.add("otexa");
     newContainers.add("select-usa");
     newContainers.add("siat");
