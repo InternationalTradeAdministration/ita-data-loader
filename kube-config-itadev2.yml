@@ -19,40 +19,39 @@ spec:
     spec:
       containers:
       - name: ita-dataloader
-        image: <container-registry-user>.azurecr.io/ita-dataloader:latest
+        image: itadevacr.azurecr.io/ita-dataloader:#{Release.Artifacts._InternationalTradeAdministration.ita-dataloader.BuildId}#
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
           - name: AZURE_STORAGE_ACCOUNT
-            value: <azure-storage-account>
+            value: #{AZURE_STORAGE_ACCOUNT}#
           - name: AZURE_STORAGE_ACCOUNT_KEY
-            value: <azure-storage-account-key>
+            value: #{AZURE_STORAGE_ACCOUNT_KEY}#
           - name: FLYWAY_URL
-            value: <azure-sql-database-url>
+            value: #{FLYWAY_URL}#
           - name: FLYWAY_USER
-            value: <azure-sql-database-username>
+            value: #{FLYWAY_USER}#
           - name: FLYWAY_PASSWORD
-            value: <azure-sql-database-password>
+            value: #{FLYWAY_PASSWORD}#
           - name: AZURE_OAUTH_CLIENT_ID
-            value: <azure-oauth-client-id>
+            value: #{AZURE_OAUTH_CLIENT_ID}#
           - name: AZURE_OAUTH_CLIENT_SECRET
-            value: <azure-oauth-client-secret>
+            value: #{AZURE_OAUTH_CLIENT_SECRET}#
           - name: AZURE_OAUTH_TENANT_ID
-            value: <azure-oauth-tenant-id>
+            value: #{AZURE_OAUTH_TENANT_ID}#
           - name: DATAFACTORY_CLIENT_ID
-            value: <azure-datafactory-client-id>
+            value: #{DATAFACTORY_CLIENT_ID}#
           - name: DATAFACTORY_CLIENT_SECRET
-            value: <azure-datafactory-client-secret>
+            value: #{DATAFACTORY_CLIENT_SECRET}#
           - name: DATAFACTORY_NAME
-            value: <azure-datafactory-name>
+            value: #{DATAFACTORY_NAME}#
           - name: DATAFACTORY_RESOURCE_GROUP
-            value: <azure-datafactory-resource-group>
+            value: #{DATAFACTORY_RESOURCE_GROUP}#
           - name: AZURE_SUBSCRIPTION_ID
-            value: <azure-datafactory-tenant-id>
+            value: #{AZURE_SUBSCRIPTION_ID}#
           - name: AZURE_TENANT_ID
-            value: <azure-datafactory-tenant-id>
-
+            value: #{AZURE_TENANT_ID}#
       restartPolicy: Always
 ---
 
@@ -79,7 +78,7 @@ metadata:
   namespace: mdsnamespace
 spec:
   rules:
-    - host: <url>
+    - host: dataloader-itadev2.vangos-cloudapp.us
       http:
         paths:
           - path: /
@@ -88,5 +87,5 @@ spec:
               servicePort: 80
   tls:
     - hosts:
-        - <url>
+        - dataloader-itadev2.vangos-cloudapp.us
       secretName: tls-secret

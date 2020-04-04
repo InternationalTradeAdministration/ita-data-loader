@@ -12,6 +12,17 @@ steps:
   - script: |
       ./build.sh
     displayName: 'Build project artifacts'
+  - task: CopyFiles@2
+    inputs:
+      Contents: 'kube-config-itadev2.yml'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    displayName: 'Copy Kube Config'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'manifest'
+      publishLocation: 'Container'
+    displayName: 'Publish Kube Config'
   - task: DockerCompose@0
     inputs:
       containerregistrytype: 'Azure Container Registry'
