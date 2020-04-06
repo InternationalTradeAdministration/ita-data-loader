@@ -16,7 +16,7 @@
         <h3 class="md-title dataloader-title"> - {{businessUnits[0].businessName}}</h3>
       </div>
     </div>
-    <git-hub />
+    <span class="version">{{version}}</span>
   </md-toolbar>
 </template>
 <style>
@@ -29,20 +29,22 @@
   font-size: 16px;
   padding: 4px;
 }
+
+.version {
+  margin-right: 22px;
+}
 </style>
 <script>
-import GitHub from "./GitHub";
 export default {
   name: "Header",
   props: ["initialContainerName", "businessUnits", "updateContainerFn"],
-  components: {
-    "git-hub": GitHub
-  },
-  created() {
+  async created() {
     this.containerName = this.initialContainerName
+    this.version = await this.getVersion()
   },
   data: () => ({
-    containerName: null
+    containerName: null,
+    version: null
   }),
   methods: {
     updateBusinessUnitContent() {
@@ -53,6 +55,10 @@ export default {
         }
       });
       this.updateContainerFn(this.containerName)
+    },
+    async getVersion() {
+      let versionResponse = await fetch('/api/version')
+      return versionResponse.text()
     }
   }
 };

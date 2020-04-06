@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/InternationalTradeAdministration/Data%20Services/_apis/build/status/Dataloader%20-%20Dev2?branchName=master)](https://dev.azure.com/InternationalTradeAdministration/Data%20Services/_build/latest?definitionId=89&branchName=master)
+
 # ITA Data Loader
 A tool that helps import (stage) data for reporting purposes. This application will allow users to upload data 
 files in a logical/systematic way so that a Data Factory pipeline can copy the data into an Azure SQL Database.
@@ -10,7 +12,10 @@ Steps to run this application on you local machine for development purposes.
 **Prerequisites** 
  - Java 8
  - Gradle
- - NPM (`cd client` then `npm install`)
+ - [NPM](https://www.npmjs.com/get-npm) (`cd client` then `npm install`)
+ - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+ - [Docker CLI](https://docs.docker.com/engine/reference/commandline/cli)
+ - [KUBECTL CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl) (if deploying to AKS)
 
 **Backend** 
  - `gradle bootRun `, http://localhost:8080
@@ -28,33 +33,33 @@ Steps to run this application on you local machine for development purposes.
  - Local build script ```./build-local.sh```
 
 ## Azure Configuration
-**Prerequisites** 
-* Azure CLI <https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest>
-* Docker CLI <https://docs.docker.com/engine/reference/commandline/cli/>
-* KUBECTL CLI (if deploying to AKS) <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
-* Azure Subscription
-* Azure Container Registry (ACR)
-* Azure Kubernetes Service (AKS)
-* A DNS Zone has been configured with a sub-domain that points to an ingress controller in AKS
-* An AKS Ingess Controller with TLS
-  * Additional documentation: <https://docs.microsoft.com/en-us/azure/aks/ingress-static-ip>
-
-**Steps** 
 1. Log into Azure using the Azure CLI 
-    - ```az login```
+ ```shell script
+    az login
+```
 1. Create a Resource Group 
-    - ```az group create --name <Resource Group Name> --location <Azure Region>```
+```shell script
+az group create --name <resource-group> --location <azure-region>
+```
 1. Create a Blob Storage Account (Don't enable Hierarchical Namespace, i.e. we don't want Data Lake Gen 2) 
-    - ```az storage account create --name <Storage Account Name> --resource-group <Resource Group> --location <Azure Region> --kind StorageV2``` 
+```shell script
+az storage account create -n <account-name> -g <resource-group> --location eastus --kind StorageV2 --access-tier Hot --sku Standard_ZRS
+``` 
 1. An Azure AD App Registration is required to procure an OAuth Client ID and Client Secret
     - a sample manifest is located here: /manifests/sample-ita-data-loader-app-registration.json
-1. Create a SQL Database: <https://docs.microsoft.com/en-us/azure/sql-database/scripts/sql-database-create-and-configure-database-cli?toc=%2fcli%2fazure%2ftoc.json>
-1. Create a Data Factory using the Azure Portal (<https://portal.azure.com>) and deploy the configuration using this Git repository: <https://github.com/InternationalTradeAdministration/ita-datafactory-config>
+1. Create a [SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/scripts/sql-database-create-and-configure-database-cli)
+```shell script
+az sql server create -l eastus -g  <resource-group> -n <server-name> -u <username> -p <password>
+az sql db create -g <resource-group> -n <database-name> -s <server-name> -e GeneralPurpose -f Gen5 -z false  -c 4 --compute-model Serverless
+```
+1. Create a Data Factory using the [Azure Portal](https://portal.azure.com) and deploy the configuration using this 
+[repository](https://github.com/InternationalTradeAdministration/ita-datafactory-config)
 1. Create an App Registration for the Data Factory with the Contributor Role
    - a sample manifest is located here: /manifests/sample-data-factory-app-registration.json
 1. Create a Container Registry
     - az acr create --resource-group <Recource Group Name> --name <Container Name> --sku Basic
 1. From here, you may customize and use the deploy scripts to deploy this application.
+1. For detail related to the deployment of containerized applications in Azure, reference this [repo](https://github.com/InternationalTradeAdministration/azure-samples) with deployment scenarios
 
 ### Required Environment Variables
     - AZURE_OAUTH_CLIENT_ID: Active Directory Client ID
@@ -70,22 +75,6 @@ Steps to run this application on you local machine for development purposes.
     - DATAFACTORY_RESOURCE_GROUP: The resource group for the data factory
     - AZURE_TENANT_ID: The Azure tenant id the datafactory is in
     - AZURE_SUBSCRIPTION_ID: The Azure subscription id the datafactory is in
-
-### Scripts & Configuration Files
-
-1. Log in with the Azure CLI: ```az login```
-1. Select the appropriate Subscription. Ex: ```az account set --subscription "Sample_Subscription"```
-1. Get credentials. Ex: ````az aks get-credentials --resource-group my-resources --name myAKS --overwrite-existing````
-1. Rename ```kube-config-template.yml``` to ```kube-config.yml``` and update it with the following:
-    - image locations
-    - namespace for each section
-    - host names in the Ingress section
-1. Update ```deploy-aks.sh``` with the appropriate Azure Container Registry and Azure Container Key
-1. Execute ```deploy-aks.sh```
-1. For Azure DevOps pipeline configuration, update: ```azure-pipelines.yml```
-
-The application will be available at the following URL: [<http://ip-dns-name.location.cloudapp.azure.com>]
-The location in the URL will be the location of the Kubernetes cluster. Ex: eastus, centralus, etc...
 
 ## Database Notes
  - Flyway is used to manage the state of the database, that's all. This application does not otherwise interact with the database

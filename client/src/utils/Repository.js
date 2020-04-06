@@ -109,4 +109,9 @@ export default class Repository {
       }
     })
   }
+
+  async _version () {
+    let version = await axios.get('/api/version')
+    return version.data
+  }
 }

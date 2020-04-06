@@ -52,6 +52,10 @@ spec:
             value: #{AZURE_SUBSCRIPTION_ID}#
           - name: AZURE_TENANT_ID
             value: #{AZURE_TENANT_ID}#
+          - name: SPRING_PROFILES_ACTIVE
+            value: production
+          - name: BUILD_ID
+            value: #{Release.Artifacts._InternationalTradeAdministration.ita-dataloader.BuildId}#
       restartPolicy: Always
 ---
 
