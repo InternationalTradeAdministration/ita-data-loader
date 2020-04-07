@@ -2,7 +2,7 @@ const axios = require('axios')
 
 export default class Repository {
   async _save (containerName, pii, file) {
-    let fileSaveResponse = await axios({
+    const fileSaveResponse = await axios({
       url: '/api/file',
       method: 'PUT',
       params: {
@@ -15,12 +15,12 @@ export default class Repository {
   }
 
   async _getBusinessUnits () {
-    let businessUnitResponse = await axios.get('/api/business-units')
+    const businessUnitResponse = await axios.get('/api/business-units')
     return businessUnitResponse.data
   }
 
   async _getDataloaderConfig (containerName) {
-    let dataSetConfigsResponse = await axios.get('/api/configuration', {
+    const dataSetConfigsResponse = await axios.get('/api/configuration', {
       params: {
         containerName
       }
@@ -30,7 +30,7 @@ export default class Repository {
   }
 
   async _saveDataloaderConfig (dataloaderConfig, containerName) {
-    let configSaveResponse = await axios({
+    const configSaveResponse = await axios({
       url: '/api/configuration',
       method: 'PUT',
       headers: {
@@ -45,7 +45,7 @@ export default class Repository {
   }
 
   async _getStorageMetadata (containerName) {
-    let storageMetadataResponse = await axios.get('/api/container-metadata', {
+    const storageMetadataResponse = await axios.get('/api/container-metadata', {
       params: {
         containerName
       }
@@ -55,7 +55,7 @@ export default class Repository {
   }
 
   async _startIngestProcess (containerName) {
-    let ingestProcessResponse = await axios.get('/api/ingest', {
+    const ingestProcessResponse = await axios.get('/api/ingest', {
       params: {
         containerName
       }
@@ -65,7 +65,7 @@ export default class Repository {
   }
 
   async _getIngestStatus (containerName) {
-    let ingestStatusResponse = await axios.get('/api/automated-ingest/status', {
+    const ingestStatusResponse = await axios.get('/api/automated-ingest/status', {
       params: {
         containerName
       }
@@ -90,7 +90,7 @@ export default class Repository {
   }
 
   async _getPipelineStatus (pipelineName) {
-    let pipelineStatusResponse = await axios.get('/api/data-factory/pipeline-status', {
+    const pipelineStatusResponse = await axios.get('/api/data-factory/pipeline-status', {
       params: {
         pipelineName
       }
@@ -111,7 +111,7 @@ export default class Repository {
   }
 
   async _version () {
-    let version = await axios.get('/api/version')
+    const version = await axios.get('/api/version')
     return version.data
   }
 }

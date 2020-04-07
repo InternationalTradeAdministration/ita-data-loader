@@ -8,7 +8,7 @@ steps:
   - task: Gradle@2
     inputs:
       gradleWrapperFile: 'gradlew'
-      tasks: 'test build'
+      tasks: 'test'
   - script: |
       ./build.sh
     displayName: 'Build project artifacts'

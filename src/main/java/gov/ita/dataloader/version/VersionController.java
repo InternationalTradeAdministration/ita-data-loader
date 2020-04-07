@@ -12,6 +12,6 @@ public class VersionController {
 
   @GetMapping("/api/version")
   public String getVersion() {
-    return "v1.0.0_" + buildId;
+    return "v1.0.0_beta_" + buildId;
   }
 }

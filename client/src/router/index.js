@@ -4,7 +4,7 @@ import Config from '@/components/Config'
 import Log from '@/components/Log'
 import APIs from '@/components/APIs'
 
-export default function router(repository) {
+export default function router (repository) {
   return new Router({
     routes: [
       {
@@ -42,4 +42,4 @@ export default function router(repository) {
       }
     ]
   })
-} 
+}
