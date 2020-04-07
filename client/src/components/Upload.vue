@@ -73,9 +73,16 @@
         <div v-if="!loading" class="md-layout storage-content">
           <md-table v-model="storageMetadata" md-sort="name" md-sort-order="asc">
             <md-table-row slot-scope="{ item }" slot="md-table-row">
+              <md-table-cell md-label="Download">
+                <md-button class="md-icon-button" @click="downloadBlob(item)">
+                  <md-icon>get_app</md-icon>
+                </md-button>
+              </md-table-cell>
               <md-table-cell md-label="File Name" md-sort-by="fileName">
-                <a v-if="item.isSnapshot" :href="item.url">{{item.fileName + ' (' + item.snapshot + ')'}}</a>
-                <a v-else :href="item.url">{{item.fileName}}</a>
+                <label
+                  v-if="item.snapshot"
+                >{{item.fileName + ' (' + item.snapshot + ')'}}</label>
+                <label v-else>{{item.fileName}}</label>
               </md-table-cell>
               <md-table-cell md-label="Uploaded At" md-sort-by="uploadedAt">{{item.uploadedAt}}</md-table-cell>
               <md-table-cell
@@ -92,7 +99,7 @@
                 <span v-else class="dot"></span>
               </md-table-cell>
               <md-table-cell md-label="Snapshot" md-sort-by="snapshot">
-                <span v-if="item.isSnapshot" class="dot filled"></span>
+                <span v-if="item.snapshot" class="dot filled"></span>
                 <span v-else class="dot"></span>
               </md-table-cell>
               <md-table-cell v-if="displayDeleteButton">
@@ -225,15 +232,10 @@ export default {
         this.containerName
       );
 
-      this.storageMetadata = storageMetadata
-        .filter(metadata => {
-          if (this.displaySnapshots) return true;
-          else return !metadata.snapshot;
-        })
-        .map(metadata => {
-          metadata.isSnapshot = (metadata.snapshot) ? true : false;
-          return metadata;
-        });
+      this.storageMetadata = storageMetadata.filter(metadata => {
+        if (this.displaySnapshots) return true;
+        else return !metadata.snapshot;
+      });
 
       this.totalFiles = this.storageMetadata.length;
 
@@ -302,9 +304,20 @@ export default {
       await this.updateBusinessUnitContent();
       this.$forceUpdate();
     },
-    async deleteFile(fileName, snapshot) {
-      await this.repository._deleteBlob(this.containerName, fileName, snapshot);
-      await this.updateBusinessUnitContent()
+    deleteFile(fileName, snapshot) {
+      this.repository._deleteBlob(this.containerName, fileName, snapshot);
+      this.storageMetadata = this.storageMetadata.filter(meta =>
+        !(meta.containerName === this.containerName &&
+        meta.fileName === fileName &&
+        meta.snapshot === snapshot)
+      )
+    },
+    downloadBlob(blobItem) {
+      this.repository._downloadBlob(
+        blobItem.containerName,
+        blobItem.fileName,
+        blobItem.snapshot
+      );
     }
   }
 };

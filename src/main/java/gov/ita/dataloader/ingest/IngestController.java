@@ -8,6 +8,7 @@ import gov.ita.dataloader.storage.BlobMetaData;
 import gov.ita.dataloader.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -146,19 +147,20 @@ public class IngestController {
     return blobMetaData;
   }
 
-  @GetMapping(value = "/api/{containerName}/{blobName}")
-  public ResponseEntity<ByteArrayResource> downloadBlob(@PathVariable String containerName,
-                                                        @PathVariable String blobName,
-                                                        @RequestParam(name = "snapshot", defaultValue = "") String snapshot) {
-    byte[] blob = (!snapshot.equals("")) ?
+  @PostMapping(value = "/api/download-blob")
+  public ResponseEntity<Resource> downloadBlob(@RequestBody BlobDownloadRequest blobDownloadRequest) {
+    String containerName = blobDownloadRequest.getContainerName();
+    String blobName = blobDownloadRequest.getBlobName();
+    String snapshot = blobDownloadRequest.getSnapshot();
+    byte[] blob = (blobDownloadRequest.getSnapshot() != null) ?
       storage.getBlob(containerName, blobName, snapshot) :
       storage.getBlob(containerName, blobName);
     ByteArrayResource resource = new ByteArrayResource(blob);
 
     return ResponseEntity.ok()
       .header(HttpHeaders.CONTENT_DISPOSITION,
-        "attachment;filename=" + blobName)
-      .contentType(MediaType.APPLICATION_PDF).contentLength(blob.length)
+        "attachment;filename=\"" + blobName + "\"")
+      .contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(blob.length)
       .body(resource);
   }
 

@@ -114,4 +114,23 @@ export default class Repository {
     const version = await axios.get('/api/version')
     return version.data
   }
+
+  async _downloadBlob (containerName, blobName, snapshot) {
+    axios({
+      url: '/api/download-blob',
+      method: 'POST',
+      responseType: 'blob',
+      data: {
+        containerName, blobName, snapshot
+      }
+    }).then((response) => {
+      const linkhref = window.URL.createObjectURL(new window.Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = linkhref
+      const blobDownloadName = snapshot === null ? blobName : blobName + '_' + snapshot
+      link.setAttribute('download', blobDownloadName)
+      document.body.appendChild(link)
+      link.click()
+    })
+  }
 }

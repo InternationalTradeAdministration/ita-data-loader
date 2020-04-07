@@ -52,6 +52,7 @@ Steps to run this application on your local machine for development purposes.
 
     ```shell script
     az storage account create -n <account-name> -g <resource-group> --location eastus --kind StorageV2 --access-tier Hot --sku Standard_ZRS
+    az storage account blob-service-properties update --account-name <account-name> --enable-delete-retention true --delete-retention-days 365
     ```
 
 1. An Azure AD App Registration is required to procure an OAuth Client ID and Client Secret; a sample manifest is located [here](/manifests/sample-ita-data-loader-app-registration.json)

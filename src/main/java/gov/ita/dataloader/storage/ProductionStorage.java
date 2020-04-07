@@ -179,9 +179,8 @@ public class ProductionStorage implements Storage {
   }
 
   private String buildUrlForBlob(String containerName, String blobName, String snapshot) {
-    if (snapshot != null)
-      return String.format("/api/%s/%s?snapshot=%s", containerName, blobName, snapshot);
-    return String.format("/api/%s/%s", containerName, blobName);
+    String blobUrl = buildStorageAccountBaseUrl() + containerName + "/" + blobName;
+    return (snapshot != null) ? blobUrl + "?snapshot=" +  snapshot : blobUrl;
   }
 
   private ContainerURL makeContainerUrl(String containerName) {
@@ -194,12 +193,16 @@ public class ProductionStorage implements Storage {
     try {
       SharedKeyCredentials credential = new SharedKeyCredentials(accountName, accountKey);
       HttpPipeline pipeline = StorageURL.createPipeline(credential, new PipelineOptions());
-      URL url = new URL(String.format("https://%s.blob.core.windows.net/", accountName));
+      URL url = new URL(buildStorageAccountBaseUrl());
       return new ServiceURL(url, pipeline);
     } catch (InvalidKeyException | MalformedURLException e) {
       e.printStackTrace();
     }
     return null;
+  }
+
+  private String buildStorageAccountBaseUrl() {
+    return String.format("https://%s.blob.core.windows.net/", accountName);
   }
 
   private Metadata makeMetaData(String uploadedBy, Boolean userUpload, Boolean pii) {
