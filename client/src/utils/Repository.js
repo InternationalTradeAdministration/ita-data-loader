@@ -2,15 +2,14 @@ const axios = require('axios')
 
 export default class Repository {
   async _save (containerName, pii, file) {
-    const fileSaveResponse = await axios({
-      url: '/api/file',
-      method: 'PUT',
-      params: {
-        containerName,
-        pii
-      },
-      data: file
-    })
+    const fileSaveResponse = await axios.put('/api/file',
+      file,
+      {
+        params: {
+          containerName,
+          pii
+        }
+      })
     return fileSaveResponse.data
   }
 
@@ -19,8 +18,8 @@ export default class Repository {
     return businessUnitResponse.data
   }
 
-  async _getDataloaderConfig (containerName) {
-    const dataSetConfigsResponse = await axios.get('/api/configuration', {
+  async _getAutomatedIngestConfig (containerName) {
+    const dataSetConfigsResponse = await axios.get('/api/automated-ingest/configuration', {
       params: {
         containerName
       }
@@ -29,18 +28,29 @@ export default class Repository {
     return dataSetConfigsResponse.data
   }
 
-  async _saveDataloaderConfig (dataloaderConfig, containerName) {
-    const configSaveResponse = await axios({
-      url: '/api/configuration',
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      params: {
-        containerName
-      },
-      data: dataloaderConfig
+  async _getDataloaderAdminConfig () {
+    const dataSetConfigsResponse = await axios.get('/api/dataloader-admin/configuration')
+    return dataSetConfigsResponse.data
+  }
+
+  async _saveDataloaderAdminConfig (businessUnits) {
+    const configSaveResponse = await axios.put('/api/dataloader-admin/configuration', {
+      businessUnits
     })
+    return configSaveResponse
+  }
+
+  async _saveAutomatedIngestConfig (dataSetConfigs, containerName) {
+    const configSaveResponse = await axios.put('/api/automated-ingest/configuration',
+      {
+        dataSetConfigs
+      },
+      {
+        params: {
+          containerName
+        }
+      }
+    )
     return configSaveResponse
   }
 
@@ -54,8 +64,10 @@ export default class Repository {
     return storageMetadataResponse.data
   }
 
-  async _startAutomatedIngestProcess (containerName) {
-    const ingestProcessResponse = await axios.get('/api/ingest', {
+  async _startAutomatedIngestProcess (containerName, dataSetConfigs) {
+    const ingestProcessResponse = await axios.post('/api/ingest', {
+      dataSetConfigs
+    }, {
       params: {
         containerName
       }
@@ -125,9 +137,7 @@ export default class Repository {
   }
 
   async _deleteBlob (containerName, fileName, snapshot) {
-    await axios({
-      url: '/api/file',
-      method: 'DELETE',
+    await axios.delete('/api/file', null, {
       params: {
         containerName,
         fileName,
@@ -142,13 +152,10 @@ export default class Repository {
   }
 
   async _downloadBlob (containerName, blobName, snapshot) {
-    axios({
-      url: '/api/download-blob',
-      method: 'POST',
-      responseType: 'blob',
-      data: {
-        containerName, blobName, snapshot
-      }
+    axios.post('/api/download-blob', {
+      containerName, blobName, snapshot
+    }, {
+      responseType: 'blob'
     }).then((response) => {
       const linkhref = window.URL.createObjectURL(new window.Blob([response.data]))
       const link = document.createElement('a')
