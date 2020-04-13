@@ -2,7 +2,7 @@ package gov.ita.dataloader.cron_jobs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.ita.dataloader.business_unit.BusinessUnitService;
+import gov.ita.dataloader.ingest.configuration.BusinessUnitService;
 import gov.ita.dataloader.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

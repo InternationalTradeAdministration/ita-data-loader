@@ -1,7 +1,5 @@
 package gov.ita.dataloader.ingest.configuration;
 
-import gov.ita.dataloader.business_unit.BusinessUnit;
-import gov.ita.dataloader.business_unit.BusinessUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;

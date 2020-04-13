@@ -1,10 +1,10 @@
-package gov.ita.dataloader.business_unit;
+package gov.ita.dataloader.ingest.configuration;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class BusinessUnitConfigResponse {
+public class DataloaderAdminConfiguration {
   public List<BusinessUnit> businessUnits;
 }

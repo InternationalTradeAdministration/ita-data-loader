@@ -1,4 +1,4 @@
-package gov.ita.dataloader.business_unit;
+package gov.ita.dataloader.ingest.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.ita.dataloader.storage.Storage;
@@ -21,8 +21,8 @@ public class BusinessUnitService {
 
   public List<BusinessUnit> getBusinessUnits() throws Exception {
     byte[] dataloaderConfig = storage.getBlob("dataloader", "configuration.json");
-    BusinessUnitConfigResponse buc = objectMapper.readValue(dataloaderConfig, BusinessUnitConfigResponse.class);
-    return buc.getBusinessUnits();
+    DataloaderAdminConfiguration dataloaderAdminConfiguration = objectMapper.readValue(dataloaderConfig, DataloaderAdminConfiguration.class);
+    return dataloaderAdminConfiguration.getBusinessUnits();
   }
 
   @GetMapping(value = "/api/storage-containers", produces = MediaType.APPLICATION_JSON_VALUE)

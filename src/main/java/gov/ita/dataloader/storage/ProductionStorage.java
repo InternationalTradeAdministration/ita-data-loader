@@ -180,7 +180,7 @@ public class ProductionStorage implements Storage {
 
   private String buildUrlForBlob(String containerName, String blobName, String snapshot) {
     String blobUrl = buildStorageAccountBaseUrl() + containerName + "/" + blobName;
-    return (snapshot != null) ? blobUrl + "?snapshot=" +  snapshot : blobUrl;
+    return (snapshot != null) ? blobUrl + "?snapshot=" + snapshot : blobUrl;
   }
 
   private ContainerURL makeContainerUrl(String containerName) {

@@ -19,8 +19,8 @@ export default class Repository {
     return businessUnitResponse.data
   }
 
-  async _getDataloaderConfig (containerName) {
-    const dataSetConfigsResponse = await axios.get('/api/configuration', {
+  async _getAutomatedIngestConfig (containerName) {
+    const dataSetConfigsResponse = await axios.get('/api/automated-ingest/configuration', {
       params: {
         containerName
       }
@@ -29,18 +29,36 @@ export default class Repository {
     return dataSetConfigsResponse.data
   }
 
-  async _saveDataloaderConfig (dataloaderConfig, containerName) {
+  async _getDataloaderAdminConfig () {
+    const dataSetConfigsResponse = await axios.get('/api/dataloader-admin/configuration')
+    return dataSetConfigsResponse.data
+  }
+
+  async _saveDataloaderAdminConfig (businessUnits) {
     const configSaveResponse = await axios({
-      url: '/api/configuration',
+      url: '/api/dataloader-admin/configuration',
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      params: {
-        containerName
-      },
-      data: dataloaderConfig
+      data: {
+        businessUnits
+      }
     })
+    return configSaveResponse
+  }
+
+  async _saveAutomatedIngestConfig (dataSetConfigs, containerName) {
+    const configSaveResponse = await axios.put('/api/automated-ingest/configuration',
+      {
+        dataSetConfigs
+      },
+      {
+        params: {
+          containerName
+        }
+      }
+    )
     return configSaveResponse
   }
 
@@ -54,8 +72,10 @@ export default class Repository {
     return storageMetadataResponse.data
   }
 
-  async _startAutomatedIngestProcess (containerName) {
-    const ingestProcessResponse = await axios.get('/api/ingest', {
+  async _startAutomatedIngestProcess (containerName, dataSetConfigs) {
+    const ingestProcessResponse = await axios.post('/api/ingest', {
+      dataSetConfigs
+    }, {
       params: {
         containerName
       }
