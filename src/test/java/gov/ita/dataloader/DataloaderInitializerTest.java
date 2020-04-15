@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import java.io.IOException;
+
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -16,7 +18,7 @@ public class DataloaderInitializerTest {
   private StorageInitializer storageInitializer;
 
   @Test
-  public void onApplicationEvent() {
+  public void onApplicationEvent() throws IOException {
     DataloaderInitializer dataloaderInitializer = new DataloaderInitializer(storageInitializer);
     dataloaderInitializer.onApplicationEvent(mock(ContextRefreshedEvent.class));
     verify(storageInitializer, times(1)).init();

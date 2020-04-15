@@ -62,4 +62,15 @@ public class ProductionBusinessUnitControllerTest {
     assertEquals("dataloader", results.get(2).getContainerName());
   }
 
+  @Test
+  public void when_no_admin_exists_all_business_units_are_returned() throws Exception {
+    businessUnits.add(new BusinessUnit("Dataloader", "dataloader", Collections.emptyList()));
+    ProductionBusinessUnitController productionBusinessUnitController = new ProductionBusinessUnitController(authenticationFacade, businessUnitService);
+    List<BusinessUnit> results = productionBusinessUnitController.getBusinessUnits();
+    assertEquals(3, results.size());
+    assertEquals("cool", results.get(0).getContainerName());
+    assertEquals("neo", results.get(1).getContainerName());
+    assertEquals("dataloader", results.get(2).getContainerName());
+  }
+
 }

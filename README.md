@@ -103,27 +103,11 @@ Steps to run this application on your local machine for development purposes.
 
 ## Additional Notes
 
-- The dataloader storage container needs to be manually updated once initially, to set users that have access to containers. See example below.
-- Only system administrators should have access to the Dataloader container
-- Storage containers only get created when that application is booted up (initialized)
-- New containers need to be manually created in Azure
-- Ex:
-
-```json
-{
-  "businessUnits": [
-    {
-      "containerName": "demo",
-      "businessName": "Demo Business Unit",
-      "users": []
-    },
-    {
-      "containerName": "dataloader",
-      "businessName": "Dataloader",
-      "users": [
-        "admin@foo.com"
-      ]
-    }
-  ]
-}
-```
+Once the application is initialized, a system administrator needs to be set. 
+ 1. Go to the application URL (ex: https://dataloader-itadev2.vangos-cloudapp.us/#/)
+ 1. Select "Dataloader ADMIN"
+ 1. Add the trade.gov email address of a system administrator to the Dataloader ADMIN "Business Unit"
+ 1. Click Save
+ 
+ ![Dataloader ADMIN Configuration](/screenshots/admin-panel.png)
+ 

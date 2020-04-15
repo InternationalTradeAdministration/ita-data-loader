@@ -12,14 +12,12 @@
         <div v-if="!loading">
           <dataloader-admin-config
             v-if="containerName === 'dataloader'"
-            v-model="config"
             :repository="repository"
           />
           <automated-ingest-config
             v-else
-            v-model="config"
             :repository="repository"
-            :container="containerName"
+            :containerName="containerName"
           />
         </div>
       </div>
@@ -55,8 +53,7 @@ export default {
     return {
       loading: true,
       containerName: null,
-      businessUnits: [],
-      config: {}
+      businessUnits: []
     };
   },
   methods: {
@@ -66,10 +63,6 @@ export default {
       this.businessUnitName = this.businessUnits.find(
         b => b.containerName === this.containerName
       ).businessName;
-      this.config =
-        this.containerName === "dataloader"
-          ? await this.repository._getDataloaderAdminConfig()
-          : await this.repository._getAutomatedIngestConfig(this.containerName);
       this.loading = false;
     },
     async updateContainer(containerName) {

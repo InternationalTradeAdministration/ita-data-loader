@@ -129,9 +129,7 @@ public class ProductionStorage implements Storage {
   public byte[] getBlob(String containerName, String blobName, String snapshot) {
     BlobURL blobURL = null;
     try {
-      blobURL = (snapshot == null) ?
-        makeContainerUrl(containerName).createBlobURL(blobName) :
-        makeContainerUrl(containerName).createBlobURL(blobName).withSnapshot(snapshot);
+      blobURL = makeContainerUrl(containerName).createBlobURL(blobName).withSnapshot(snapshot);
     } catch (MalformedURLException | UnknownHostException e) {
       e.printStackTrace();
     }

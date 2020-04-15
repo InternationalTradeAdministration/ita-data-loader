@@ -1,7 +1,6 @@
 package gov.ita.dataloader.ingest.configuration;
 
 import gov.ita.dataloader.security.AuthenticationFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +28,13 @@ public class ProductionBusinessUnitController {
     List<BusinessUnit> businessUnits = businessUnitService.getBusinessUnits();
     String user = authenticationFacade.getUserName().toLowerCase();
 
-    boolean isAdmin = businessUnits.stream().anyMatch(businessUnit -> businessUnit.isAdmin(user));
+    boolean noAdminsExist = businessUnits.stream().anyMatch(BusinessUnit::isAdminEmpty);
+    boolean userIsAdmin = businessUnits.stream().anyMatch(businessUnit -> businessUnit.isAdmin(user));
 
-    if (isAdmin) {
+    if (userIsAdmin || noAdminsExist) {
       return businessUnits;
     } else {
-      return businessUnits.stream().filter(businessUnit -> businessUnit.belongsTo(user)).collect(Collectors.toList());
+      return businessUnits.stream().filter(businessUnit -> businessUnit.includes(user)).collect(Collectors.toList());
     }
   }
 

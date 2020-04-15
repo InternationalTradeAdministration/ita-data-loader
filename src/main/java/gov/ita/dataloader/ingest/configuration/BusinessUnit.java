@@ -18,7 +18,11 @@ public class BusinessUnit {
     return containerName.equals("dataloader") && users.contains(user);
   }
 
-  boolean belongsTo(String user) {
+  boolean includes(String user) {
     return users.contains(user);
+  }
+
+  boolean isAdminEmpty() {
+    return containerName.equals("dataloader") && users.size() == 0;
   }
 }

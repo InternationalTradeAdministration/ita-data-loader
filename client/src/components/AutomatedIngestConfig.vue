@@ -29,7 +29,7 @@
     <div class="md-layout md-gutter">
       <div class="md-layout">
         <div class="config-text">
-          <json-viewer v-if="!editing" :value="dataSetConfigs" :expand-depth="4" />
+          <json-viewer v-if="!editing && dataSetConfigs" :value="dataSetConfigs" :expand-depth="4" />
           <md-field v-else>
             <textarea v-model="dataSetConfigsBeautified" rows="200" cols="195" wrap="off"></textarea>
           </md-field>
@@ -53,7 +53,7 @@ import beautify from "json-beautify";
 
 export default {
   name: "AutomatedIngestConfig",
-  props: ["value", "repository", "container"],
+  props: ["repository", "containerName"],
   data: () => ({
     editing: false,
     dataSetConfigs: null,
@@ -62,15 +62,20 @@ export default {
     ingestClicked: false,
     ingestMessage: null
   }),
-  created() {
-    this.dataSetConfigs = this.value.dataSetConfigs; 
+  async created() {
+    let config = await this.repository._getAutomatedIngestConfig(this.containerName).catch(error => {
+      return {
+        dataSetConfigs: []
+      }
+    });
+    this.dataSetConfigs = config.dataSetConfigs;
     this.dataSetConfigsBeautified = beautify(this.dataSetConfigs, null, 2, 100);
   },
   methods: {
     async startIngestProcess() {
       this.ingestClicked = true;
       const status = await this.repository._startAutomatedIngestProcess(
-        this.container,
+        this.containerName,
         this.dataSetConfigs
       );
       if (status === "started") {
@@ -86,7 +91,7 @@ export default {
       this.dataSetConfigs = JSON.parse(this.dataSetConfigsBeautified);
       let configSaveResponse = await this.repository._saveAutomatedIngestConfig(
         this.dataSetConfigs,
-        this.container
+        this.containerName
       );
 
       if (configSaveResponse.status === 200) this.configSaved = true;

@@ -11,6 +11,7 @@
     <div class="md-layout md-gutter">
       <div class="md-layout-item md-size-90">
         <md-table
+          v-if="businessUnits"
           v-model="businessUnits"
           md-sort="containerName"
           md-sort-order="asc"
@@ -46,14 +47,15 @@ import Repository from "@/utils/Repository";
 
 export default {
   name: "DataloaderAdminConfig",
-  props: ["value", "repository"],
+  props: ["repository"],
   data: () => ({
     editing: false,
     businessUnits: null,
     configSaved: false
   }),
-  created() {
-    this.businessUnits = this.value.businessUnits;
+  async created() {
+    let config = await this.repository._getDataloaderAdminConfig();
+    this.businessUnits = config.businessUnits;
   },
   methods: {
     async saveConfiguration() {
