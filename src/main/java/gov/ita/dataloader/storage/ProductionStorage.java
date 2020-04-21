@@ -1,10 +1,11 @@
 package gov.ita.dataloader.storage;
 
-import com.microsoft.azure.storage.blob.*;
-import com.microsoft.azure.storage.blob.models.BlobFlatListSegment;
-import com.microsoft.azure.storage.blob.models.BlobHTTPHeaders;
-import com.microsoft.azure.storage.blob.models.ContainerItem;
-import com.microsoft.rest.v2.http.HttpPipeline;
+import com.azure.core.http.rest.PagedIterable;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.*;
 import gov.ita.dataloader.HttpHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.channels.AsynchronousFileChannel;
-import java.nio.file.Paths;
-import java.security.InvalidKeyException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.microsoft.azure.storage.blob.models.DeleteSnapshotsOptionType.INCLUDE;
 
 @Slf4j
 @Service
@@ -42,34 +36,27 @@ public class ProductionStorage implements Storage {
 
   @Override
   public void createContainer(String containerName) {
-    log.info("Initializing container: {}", containerName);
-    makeContainerUrl(containerName)
-      .create(null, null, null)
-      .blockingGet();
+    log.info("Creating container: {}", containerName);
+    makeBlobServiceClient().createBlobContainer(containerName);
   }
 
   @Override
   public void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload, Boolean pii) {
+    log.info("Saving blob {} to container {}", fileName, containerName);
+
     try {
       if (user == null) user = accountName;
 
-      ContainerURL containerURL = makeContainerUrl(containerName);
-      BlockBlobURL blobURL = containerURL.createBlockBlobURL(fileName);
+      BlobContainerClient blobContainerClient = makeBlobServiceClient().getBlobContainerClient(containerName);
+      BlobClient blobClient = blobContainerClient.getBlobClient(fileName);
 
       File tmpFile = File.createTempFile("tmpFile", ".tmp");
       OutputStream os = new FileOutputStream(tmpFile);
       os.write(fileContent);
       os.close();
 
-      AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(Paths.get(tmpFile.getAbsolutePath()));
-      TransferManagerUploadToBlockBlobOptions options =
-        new TransferManagerUploadToBlockBlobOptions(
-          null,
-          makeHeader(fileName),
-          makeMetaData(user, userUpload, pii),
-          null,
-          10);
-      TransferManager.uploadFileToBlockBlob(fileChannel, blobURL, 1000000, 20000000, options).blockingGet();
+      ParallelTransferOptions parallelTransferOptions = new ParallelTransferOptions(1000000, 3, null);
+      blobClient.uploadFromFile(tmpFile.getAbsolutePath(), parallelTransferOptions, makeHeader(fileName), makeMetaData(user, userUpload, pii), null, null, null);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -88,23 +75,22 @@ public class ProductionStorage implements Storage {
   public List<BlobMetaData> getBlobMetadata(String containerName, Boolean withSnapshots) {
     ListBlobsOptions listBlobsOptions = new ListBlobsOptions();
     BlobListDetails details = new BlobListDetails();
-    details.withMetadata(true);
-    details.withSnapshots(withSnapshots);
-    listBlobsOptions.withDetails(details);
-    BlobFlatListSegment segment = makeContainerUrl(containerName)
-      .listBlobsFlatSegment(null, listBlobsOptions, null).blockingGet().body().segment();
-    if (segment != null && segment.blobItems() != null) {
-      return segment.blobItems()
-        .stream().map(
-          x -> new BlobMetaData(
-            x.name(),
-            x.snapshot(),
-            buildUrlForBlob(containerName, x.name(), x.snapshot()),
-            x.properties().contentLength(),
-            containerName,
-            x.properties().lastModified(),
-            x.metadata()
-          )).filter(item -> !item.fileName.startsWith("adfpolybaserejectedrows"))
+    details.setRetrieveMetadata(true);
+    details.setRetrieveSnapshots(withSnapshots);
+    listBlobsOptions.setDetails(details);
+    PagedIterable<BlobItem> segment = getBlobContainerClient(containerName)
+      .listBlobs(listBlobsOptions, null);
+    if (segment.stream() != null) {
+      return segment.stream().map(
+        x -> new BlobMetaData(
+          x.getName(),
+          x.getSnapshot(),
+          buildUrlForBlob(containerName, x.getName(), x.getSnapshot()),
+          x.getProperties().getContentLength(),
+          containerName,
+          x.getProperties().getLastModified(),
+          x.getMetadata()
+        )).filter(item -> !item.fileName.startsWith("adfpolybaserejectedrows"))
         .collect(Collectors.toList());
     }
 
@@ -113,65 +99,52 @@ public class ProductionStorage implements Storage {
 
   @Override
   public Set<String> getContainerNames() {
-    return makeServiceURL().listContainersSegment(null, null)
-      .blockingGet().body()
-      .containerItems().stream().map(ContainerItem::name)
-      .collect(Collectors.toSet());
+    return makeBlobServiceClient().listBlobContainers().stream().map(BlobContainerItem::getName).collect(Collectors.toSet());
   }
 
   @Override
   public byte[] getBlob(String containerName, String blobName) {
-    BlobURL blobURL = makeContainerUrl(containerName).createBlobURL(blobName);
-    return downloadBlob(blobURL);
+    return downloadBlob(makeBlobServiceClient().getBlobContainerClient(containerName).getBlobClient(blobName));
   }
 
   @Override
   public byte[] getBlob(String containerName, String blobName, String snapshot) {
-    BlobURL blobURL = null;
-    try {
-      blobURL = makeContainerUrl(containerName).createBlobURL(blobName).withSnapshot(snapshot);
-    } catch (MalformedURLException | UnknownHostException e) {
-      e.printStackTrace();
-    }
-
-    return downloadBlob(blobURL);
+    return downloadBlob(makeBlobServiceClient().getBlobContainerClient(containerName).getBlobClient(blobName, snapshot));
   }
 
-  private byte[] downloadBlob(BlobURL blobURL) {
+  private byte[] downloadBlob(BlobClient blobClient) {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    blobURL
-      .download()
-      .blockingGet()
-      .body(new ReliableDownloadOptions())
-      .blockingForEach(b -> outputStream.write(b.array()));
+    blobClient.download(outputStream);
     return outputStream.toByteArray();
   }
 
   @Override
   public void makeSnapshot(String containerName, String blobName) {
-    makeServiceURL().createContainerURL(containerName).createBlobURL(blobName).createSnapshot().blockingGet();
+    getBlobContainerClient(containerName).getBlobClient(blobName).createSnapshot();
   }
+
 
   @Override
   public void delete(String containerName, String blobName, String snapshot) {
-    try {
-      log.info("Deleting blob snapshot: {} {}", blobName, snapshot);
-      makeServiceURL().createContainerURL(containerName)
-        .createBlobURL(blobName).withSnapshot(snapshot)
-        .delete().blockingGet();
-    } catch (MalformedURLException | UnknownHostException e) {
-      e.printStackTrace();
-    }
+    log.info("Deleting blob snapshot: {} {}", blobName, snapshot);
+    getBlobContainerClient(containerName).getBlobClient(blobName, snapshot).delete();
   }
 
   @Override
-  public void delete(String containerName, String blobName) {
-    for (BlobMetaData b : getBlobMetadata(containerName, false)) {
-      if (b.getFileName().contains(blobName)) {
+  public void delete(String containerName, String blobNamePattern) {
+    for (BlobMetaData b : getBlobMetadata(containerName, true)) {
+      if (b.getFileName().contains(blobNamePattern)) {
+        if (b.getSnapshot() != null) {
+          log.info("Deleting blob snapshot: {} {}", b.getFileName(), b.getSnapshot());
+          getBlobContainerClient(containerName).getBlobClient(b.getFileName(), b.getSnapshot()).delete();
+        }
+      }
+    }
+
+    for (BlobMetaData b : getBlobMetadata(containerName, true)) {
+      if (b.getFileName().contains(blobNamePattern)) {
         log.info("Deleting blob: {}", b.getFileName());
-        makeServiceURL().createContainerURL(containerName).
-          createBlobURL(b.getFileName())
-          .delete(INCLUDE, null, null).blockingGet();
+        getBlobContainerClient(containerName).getBlobClient(blobNamePattern).delete();
       }
     }
   }
@@ -181,37 +154,28 @@ public class ProductionStorage implements Storage {
     return (snapshot != null) ? blobUrl + "?snapshot=" + snapshot : blobUrl;
   }
 
-  private ContainerURL makeContainerUrl(String containerName) {
-    ServiceURL serviceURL = makeServiceURL();
-    assert serviceURL != null;
-    return serviceURL.createContainerURL(containerName);
+  private BlobContainerClient getBlobContainerClient(String containerName) {
+    return makeBlobServiceClient().getBlobContainerClient(containerName);
   }
 
-  private ServiceURL makeServiceURL() {
-    try {
-      SharedKeyCredentials credential = new SharedKeyCredentials(accountName, accountKey);
-      HttpPipeline pipeline = StorageURL.createPipeline(credential, new PipelineOptions());
-      URL url = new URL(buildStorageAccountBaseUrl());
-      return new ServiceURL(url, pipeline);
-    } catch (InvalidKeyException | MalformedURLException e) {
-      e.printStackTrace();
-    }
-    return null;
+  private BlobServiceClient makeBlobServiceClient() {
+    String connectionString = "DefaultEndpointsProtocol=https;AccountName=" + accountName + ";AccountKey=" + accountKey + ";EndpointSuffix=core.windows.net";
+    return new BlobServiceClientBuilder().connectionString(connectionString).buildClient();
   }
 
   private String buildStorageAccountBaseUrl() {
     return String.format("https://%s.blob.core.windows.net/", accountName);
   }
 
-  private Metadata makeMetaData(String uploadedBy, Boolean userUpload, Boolean pii) {
-    Metadata metadata = new Metadata();
+  private HashMap<String, String> makeMetaData(String uploadedBy, Boolean userUpload, Boolean pii) {
+    HashMap<String, String> metadata = new HashMap<String, String>();
     metadata.put("uploaded_by", uploadedBy);
     metadata.put("user_upload", userUpload.toString());
     metadata.put("pii", pii.toString());
     return metadata;
   }
 
-  private BlobHTTPHeaders makeHeader(String fileName) {
+  private BlobHttpHeaders makeHeader(String fileName) {
     String contentType = null;
 
     if (fileName.endsWith(".zip"))
@@ -225,8 +189,8 @@ public class ProductionStorage implements Storage {
     if (fileName.endsWith(".txt"))
       contentType = "text/plain";
 
-    BlobHTTPHeaders headers = new BlobHTTPHeaders();
-    headers.withBlobContentType(contentType);
+    BlobHttpHeaders headers = new BlobHttpHeaders();
+    headers.setContentType(contentType);
     return headers;
   }
 }
