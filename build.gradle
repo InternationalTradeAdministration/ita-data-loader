@@ -21,7 +21,8 @@ dependencies {
     implementation 'com.microsoft.azure:azure-active-directory-spring-boot-starter:2.1.6'
     implementation 'com.nimbusds:oauth2-oidc-sdk:5.64.4' // Adal4j 1.6.x requires 5.64 - spring boot / security depends on 6.x by default
     implementation 'org.projectlombok:lombok:1.18.8'
-    implementation 'com.microsoft.azure:azure-storage-blob:11.0.1'
+    implementation 'com.azure:azure-storage-blob:12.0.0'
+    implementation 'com.azure:azure-storage-common:12.0.0'
     implementation 'com.microsoft.rest.v2:client-runtime:2.1.1'
     implementation 'commons-io:commons-io:2.4'
     implementation 'org.apache.commons:commons-csv:1.5'

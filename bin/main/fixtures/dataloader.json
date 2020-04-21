@@ -1,0 +1,39 @@
+{
+  "businessUnits": [
+    {
+      "containerName": "select-usa",
+      "businessName": "Select USA",
+      "users": []
+    },
+    {
+      "containerName": "otexa",
+      "businessName": "OTEXA",
+      "users": []
+    },
+    {
+      "containerName": "fta-tariff-rates",
+      "businessName": "FTA Tariff Rates",
+      "users": []
+    },
+    {
+      "containerName": "demo",
+      "businessName": "Demo Business Unit",
+      "users": []
+    },
+    {
+      "containerName": "siat",
+      "businessName": "Survey of International Air Travelers",
+      "users": []
+    },
+    {
+      "containerName": "sima",
+      "businessName": "SIMA",
+      "users": []
+    },
+    {
+      "containerName": "dataloader",
+      "businessName": "Dataloader",
+      "users": []
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+{
+  "dataSetConfigs": [
+    {
+      "url": "https://www.imf.org/external/pubs/ft/weo/2019/02/weodata/WEOOct2019all.xls",
+      "enabled": false,
+      "fileName": "WEODATA.csv",
+      "replaceValues": [
+        {
+          "replaceThis": ".*\\b(International Monetary Fund, World Economic Outlook Database)\\b.*",
+          "withThis": ""
+        }
+      ],
+      "zipFileConfigs": null
+    },
+    {
+      "url": "http://api.worldbank.org/v2/en/indicator/IC.BUS.EASE.XQ?downloadformat=csv",
+      "enabled": false,
+      "fileName": "WORLDBANK_EASE_INDICATOR_CSV.zip",
+      "replaceValues": null,
+      "zipFileConfigs": [
+        {
+          "originalFileName": "^API_IC.BUS.EASE.XQ_DS2_en_csv_v2.*$",
+          "destinationFileName": "WORLDBANK_EASE_COUNTRY_INDEX.csv",
+          "skipLineCount": 4,
+          "replaceValues": [
+            {
+              "replaceThis": ",\r\n",
+              "withThis": "\r\n"
+            }
+          ]
+        },
+        {
+          "originalFileName": "^Metadata_Indicator_API_IC.BUS.EASE.XQ_DS2_en_csv_v2.*$",
+          "destinationFileName": "WORLDBANK_EASE_INDICATOR_DESCRIPTION.csv",
+          "skipLineCount": null,
+          "replaceValues": [
+            {
+              "replaceThis": ",\r\n",
+              "withThis": "\r\n"
+            }
+          ]
+        },
+        {
+          "originalFileName": "^Metadata_Country_API_IC.BUS.EASE.XQ_DS2_en_csv_v2.*$",
+          "destinationFileName": "WORLDBANK_EASE_COUNTRY_METADATA.csv",
+          "skipLineCount": null,
+          "replaceValues": [
+            {
+              "replaceThis": ",\r\n",
+              "withThis": "\r\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://apps.bea.gov/api/data/?DataSetName=NIPA&Frequency=A&ResultFormat=json&ShowMillions=N&TableName=T60400D&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&Year=X&method=GetData&ResultFormat=json",
+      "enabled": false,
+      "fileName": "BEA_NIPA.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Classification=Country&SeriesId=1,4,6,7,8,10,14&OwnershipLevel=0&NonbankAffiliatesOnly=0&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country/BEA_MNE_C_IN_0.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Classification=Country&SeriesId=22,23,24,25,26,27&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country/BEA_MNE_C_IN_2.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Classification=Country&SeriesId=1,4,6,7,8,10,14&OwnershipLevel=0&NonbankAffiliatesOnly=0&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country/BEA_MNE_C_OUT_0.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Classification=Country&SeriesId=25,27,30,31,32,33&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country/BEA_MNE_C_OUT_2.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=State&Classification=Country&SeriesId=8&OwnershipLevel=0&NonbankAffiliatesOnly=0&state=all&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country/BEA_MNE_C_STATE.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=1,4,6,8&OwnershipLevel=0&NonbankAffiliatesOnly=0&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_0.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=1,4,6,7,8,10,14&OwnershipLevel=0&NonbankAffiliatesOnly=0&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_0.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=22&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_22.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=23&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_23.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=24&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_24.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=25&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_25.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=26&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_26.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=27&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_IN_2_27.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=25&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_25.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=27&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_27.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=30&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_30.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=31&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_31.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=32&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_32.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=outward&Industry=ALL&Classification=CountrybyIndustry&SeriesId=33&OwnershipLevel=2&NonbankAffiliatesOnly=2&GetFootnotes=No&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-by-industry/BEA_MNE_C_I_OUT_2_33.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountryofUBObyIndustry&SeriesId=22&OwnershipLevel=2&NonbankAffiliatesOnly=2&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-ubo-by-industry/BEA_MNE_C_UBO_IN_2_22.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountryofUBObyIndustry&SeriesId=27&OwnershipLevel=2&NonbankAffiliatesOnly=2&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-ubo-by-industry/BEA_MNE_C_UBO_IN_2_27.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&Country=ALL&DirectionOfInvestment=inward&Industry=ALL&Classification=CountryofUBO&SeriesId=22,27&OwnershipLevel=2&NonbankAffiliatesOnly=2&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-country-ubo-by-industry/BEA_MNE_C_UBO_2_22_27.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&DirectionOfInvestment=inward&Classification=Industry&SeriesId=22&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-industry/BEA_MNE_I_IN_22.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=MNE&Year=ALL&DirectionOfInvestment=State&Classification=Industry&Industry=all&SeriesId=ALL&OwnershipLevel=0&NonbankAffiliatesOnly=0&State=ALL&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-mne-industry/BEA_MNE_I_STATE.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=ITA&Indicator=ExpGds&AreaOrCountry=ALL&Frequency=A&Year=ALL&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-ita/BEA_ITA_ExpGds.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=ITA&Indicator=ExpServ&AreaOrCountry=ALL&Frequency=A&Year=ALL&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-ita/BEA_ITA_ExpServ.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=ITA&Indicator=ImpGds&AreaOrCountry=ALL&Frequency=A&Year=ALL&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-ita/BEA_ITA_ImpGds.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://www.bea.gov/api/data/?&UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&method=GetData&DataSetName=ITA&Indicator=ImpServ&AreaOrCountry=ALL&Frequency=A&Year=ALL&ResultFormat=json",
+      "enabled": false,
+      "fileName": "bea-ita/BEA_ITA_ImpServ.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://apps.bea.gov/api/data/?UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&Classification=countryofUBObytype&DataSetName=MNE&DirectionOfInvestment=inward&ResultFormat=json&Year=ALL&method=GetData",
+      "enabled": true,
+      "fileName": "bea-mne-country-by-type/BEA13_C_TYPE_IN.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://apps.bea.gov/api/data/?UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&Classification=statebytype&DataSetName=MNE&DirectionOfInvestment=inward&ResultFormat=json&Year=ALL&method=GetData",
+      "enabled": false,
+      "fileName": "bea-mne-state-by-type/BEA13_S_TYPE_IN.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://apps.bea.gov/api/data/?UserID=DE111E03-2350-4F3F-B11E-31CCB940C1AE&Classification=industrybytype&DataSetName=MNE&DirectionOfInvestment=inward&ResultFormat=json&Year=ALL&method=GetData",
+      "enabled": false,
+      "fileName": "bea-mne-industry-by-type/BEA13_I_TYPE_IN.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://stats.oecd.org/SDMX-JSON/data/PDB_LV/AUS+AUT+BEL+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+EA19+EU28+G-7+OECD+NMEC+BRA+CHN+COL+IND+IDN+RUS+ZAF+BRIICS.T_GDP+T_POPTOT+T_GDPPOP+T_HRSTO+T_HRSAV+T_GDPHRS+T_EMPTO+T_GDPEMP+T_HRSPOP+T_GPGDPO+T_GPHRPO+T_GPGDHR.C+CPC+VPVOB+PEHRS+GAP+PCTUS/all?startTime=1970&endTime=2018&dimensionAtObservation=allDimensions&pid=d404f369-f43a-4cf4-9e00-d8a75d85eae0",
+      "enabled": false,
+      "fileName": "OECD_GDP.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://stats.oecd.org/SDMX-JSON/data/EPL_OV/AUS+AUT+BEL+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+OECD+COL+CRI+LVA+LTU+ALB+ARG+BHS+BRB+BOL+BIH+BRA+CHN+HRV+DOM+ECU+SLV+MKD+GTM+HND+IND+IDN+JAM+KAZ+XKX+MYS+MNE+NIC+PAN+PRY+PER+RUS+SAU+SRB+ZAF+THA+TUN+URY+VEN.EPRC_V1+EPRC_V2+EPRC_V3/all?startTime=1990&endTime=2015&dimensionAtObservation=allDimensions&pid=d404f369-f43a-4cf4-9e00-d8a75d85eae0",
+      "enabled": false,
+      "fileName": "OECD_STRICTNESS_OF_EMPLOYMENT_PROTECTION.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    },
+    {
+      "url": "https://stats.oecd.org/SDMX-JSON/data/ANHRS/AUS+AUT+BEL+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+OECD+CRI+RUS.DE+TE.A/all?startTime=2000&endTime=2018&dimensionAtObservation=allDimensions&pid=d404f369-f43a-4cf4-9e00-d8a75d85eae0",
+      "enabled": false,
+      "fileName": "OECD_AVERGAGE_ANNUAL_HOURS_WORKED_PER_WORKER.json",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    }
+  ]
+}
