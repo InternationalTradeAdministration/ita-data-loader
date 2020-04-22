@@ -23,7 +23,7 @@
 <style>
 .nav-menu {
   background: #8b9197;
-  height: 1000px;
+  height: 100vh;
   width: 55px;
 }
 

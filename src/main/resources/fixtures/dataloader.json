@@ -18,7 +18,9 @@
     {
       "containerName": "demo",
       "businessName": "Demo Business Unit",
-      "users": []
+      "users": [
+        "john.wick@cool.io"
+      ]
     },
     {
       "containerName": "siat",
@@ -32,7 +34,7 @@
     },
     {
       "containerName": "dataloader",
-      "businessName": "Dataloader",
+      "businessName": "Dataloader ADMIN",
       "users": []
     }
   ]

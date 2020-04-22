@@ -1,7 +1,6 @@
 package gov.ita.dataloader.ingest;
 
 import gov.ita.dataloader.TestHelpers;
-import gov.ita.dataloader.datafactory.DataFactoryGateway;
 import gov.ita.dataloader.ingest.translators.Translator;
 import gov.ita.dataloader.ingest.translators.TranslatorFactory;
 import gov.ita.dataloader.ingest.translators.TranslatorType;

@@ -6,6 +6,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 public class DataloaderInitializer implements ApplicationListener<ContextRefreshedEvent> {
@@ -19,6 +21,10 @@ public class DataloaderInitializer implements ApplicationListener<ContextRefresh
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {
     log.info("Initializing storage");
-    storageInitializer.init();
+    try {
+      storageInitializer.init();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
