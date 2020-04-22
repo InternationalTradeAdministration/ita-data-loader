@@ -6,11 +6,6 @@ spring:
       max-request-size: 100MB
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-tariff-docs:
-  access-token-url: ${TARIFF_DOCS_ACCESS_TOKEN_URL}
-  client-id: ${TARIFF_DOCS_CLIENT_ID}
-  client-secret: ${TARIFF_DOCS_CLIENT_SECRET}
-  metadata-url: ${TARIFF_DOCS_METADATA_URL}
 build-id: n/a
 
 ---
