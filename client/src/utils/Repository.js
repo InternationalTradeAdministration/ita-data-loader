@@ -137,7 +137,7 @@ export default class Repository {
   }
 
   async _deleteBlob (containerName, fileName, snapshot) {
-    await axios.delete('/api/file', null, {
+    await axios.delete('/api/file', {
       params: {
         containerName,
         fileName,

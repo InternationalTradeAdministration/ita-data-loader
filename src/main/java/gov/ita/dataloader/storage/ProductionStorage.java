@@ -144,7 +144,7 @@ public class ProductionStorage implements Storage {
     for (BlobMetaData b : getBlobMetadata(containerName, true)) {
       if (b.getFileName().contains(blobNamePattern)) {
         log.info("Deleting blob: {}", b.getFileName());
-        getBlobContainerClient(containerName).getBlobClient(blobNamePattern).delete();
+        getBlobContainerClient(containerName).getBlobClient(b.getFileName()).delete();
       }
     }
   }

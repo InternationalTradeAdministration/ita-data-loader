@@ -28,18 +28,18 @@ public class SimaCensusCsvTranslatorTest {
   }
 
   @Test
-  public void translates_CNTYDESC() {
-    assertEquals("Canada", results.get(0).get("CNTYDESC"));
+  public void translates_CTRY_DESC() {
+    assertEquals("Canada", results.get(0).get("CTRY_DESC"));
   }
 
   @Test
-  public void translates_ldesccen36() {
-    assertEquals("INGOTS AND STEEL FOR CASTINGS.........1A", results.get(0).get("ldesccen36"));
+  public void translates_COMM_DESC() {
+    assertEquals("INGOTS AND STEEL FOR CASTINGS.........1A", results.get(0).get("COMM_DESC"));
   }
 
   @Test
-  public void translates_grade() {
-    assertEquals("S", results.get(0).get("grade"));
+  public void translates_STEEL_TYPE() {
+    assertEquals("S", results.get(0).get("STEEL_TYPE"));
   }
 
   @Test
@@ -48,32 +48,32 @@ public class SimaCensusCsvTranslatorTest {
   }
 
   @Test
-  public void translates_UNKNOWN_FIELD_1() {
-    assertEquals("0000000547.785", results.get(0).get("UNKNOWN_FIELD_1"));
+  public void translates_NETTON() {
+    assertEquals("0000000547.785", results.get(0).get("NETTON"));
   }
 
   @Test
-  public void translates_UNKNOWN_FIELD_2() {
-    assertEquals("000001676.43", results.get(0).get("UNKNOWN_FIELD_2"));
+  public void translates_AVGNETPR() {
+    assertEquals("000001676.43", results.get(0).get("AVGNETPR"));
   }
 
   @Test
-  public void translates_QTYMT() {
-    assertEquals("0000000496.943", results.get(0).get("QTYMT"));
+  public void translates_METRICTON() {
+    assertEquals("0000000496.943", results.get(0).get("METRICTON"));
   }
 
   @Test
-  public void translates_UnknownField3() {
-    assertEquals("000001847.94", results.get(0).get("UNKNOWN_FIELD_3"));
+  public void translates_AVGMETPR() {
+    assertEquals("000001847.94", results.get(0).get("AVGMETPR"));
   }
 
   @Test
-  public void translates_Month() {
-    assertEquals("12", results.get(0).get("SMONTH"));
+  public void translates_STAT_MO() {
+    assertEquals("12", results.get(0).get("STAT_MO"));
   }
 
   @Test
-  public void translates_Year() {
-    assertEquals("2019", results.get(0).get("SYEAR"));
+  public void translates_STAT_YEAR() {
+    assertEquals("2019", results.get(0).get("STAT_YEAR"));
   }
 }

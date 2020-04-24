@@ -84,6 +84,7 @@ Steps to run this application on your local machine for development purposes.
 
 - AZURE_OAUTH_CLIENT_ID: Active Directory Client ID
 - AZURE_OAUTH_CLIENT_SECRET: Active Directory Client Secret
+- AZURE_OAUTH_TENANT_ID: Active Directory Tenant ID
 - AZURE_STORAGE_ACCOUNT: Blob Storage Account
 - AZURE_STORAGE_ACCOUNT_KEY: Blob Storage Account Key
 - FLYWAY_URL: The jdbc connection to a AZURE SQL Database

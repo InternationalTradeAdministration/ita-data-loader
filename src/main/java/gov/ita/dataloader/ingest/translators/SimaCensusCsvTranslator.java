@@ -8,6 +8,10 @@ import java.io.StringWriter;
 
 public class SimaCensusCsvTranslator implements Translator {
 
+  /**
+   * Used the following document as a reference: //https://www.census.gov/foreign-trade/structures/stlstruc.txt
+   */
+
   @Override
   public byte[] translate(byte[] bytes) {
     StringWriter stringWriter = new StringWriter();
@@ -17,46 +21,46 @@ public class SimaCensusCsvTranslator implements Translator {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
         .withHeader(
           "COUNTRY",
-          "CNTYDESC",
-          "ldesccen36",
-          "grade",
+          "CTRY_DESC",
+          "COMM_DESC",
+          "STEEL_TYPE",
           "VALUE",
-          "UNKNOWN_FIELD_1",
-          "UNKNOWN_FIELD_2",
-          "QTYMT",
-          "UNKNOWN_FIELD_3",
-          "SMONTH",
-          "SYEAR"
+          "NETTON",
+          "AVGNETPR",
+          "METRICTON",
+          "AVGMETPR",
+          "STAT_MO",
+          "STAT_YEAR"
         )
       );
 
       String[] lines = new String(bytes).split(System.getProperty("line.separator"));
 
       for (String line : lines) {
-        String country = line.substring(0, 4);
-        String countrydesc = line.substring(5, 35);
-        String ldesccen36 = line.substring(36, 76);
-        String grade = line.substring(77, 78);
+        String countryId = line.substring(0, 4);
+        String countryDescription = line.substring(5, 35);
+        String commodityDescription = line.substring(36, 76);
+        String steelType = line.substring(77, 78);
         String value = line.substring(79, 89);
-        String unknownField1 = line.substring(90, 104);
-        String unknownField2 = line.substring(105, 117);
-        String qtymt = line.substring(118, 132);
-        String unknownField3 = line.substring(133, 145);
-        String smonth = line.substring(146, 148);
-        String syear = line.substring(149, 153);
+        String netton = line.substring(90, 104);
+        String avgnetpr = line.substring(105, 117);
+        String metricton = line.substring(118, 132);
+        String avgmetpr = line.substring(133, 145);
+        String month = line.substring(146, 148);
+        String year = line.substring(149, 153);
 
         csvPrinter.printRecord(
-          country,
-          countrydesc,
-          ldesccen36,
-          grade,
+          countryId,
+          countryDescription,
+          commodityDescription,
+          steelType,
           value,
-          unknownField1,
-          unknownField2,
-          qtymt,
-          unknownField3,
-          smonth,
-          syear
+          netton,
+          avgnetpr,
+          metricton,
+          avgmetpr,
+          month,
+          year
         );
       }
 

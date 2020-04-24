@@ -1,0 +1,11 @@
+{
+  "dataSetConfigs": [
+    {
+      "url": "https://www.census.gov/foreign-trade/Press-Release/2020pr/02/steel/fstldata.txt",
+      "enabled": true,
+      "fileName": "census/202002F.txt",
+      "replaceValues": null,
+      "zipFileConfigs": null
+    }
+  ]
+}
