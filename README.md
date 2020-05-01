@@ -12,8 +12,7 @@ Steps to run this application on your local machine for development purposes.
 
 ### Prerequisites
 
-- Java 8
-- Gradle
+- Java 14
 - [NPM](https://www.npmjs.com/get-npm) (`cd client` then `npm install`)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Docker CLI](https://docs.docker.com/engine/reference/commandline/cli)
