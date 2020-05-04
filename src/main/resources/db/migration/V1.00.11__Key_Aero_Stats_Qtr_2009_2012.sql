@@ -16,7 +16,7 @@ create TABLE KEY_AERO_STATS_QTR_2009_2012 (
     "Production Workers (000s)" decimal(10,2),
     "Production Workers Growth" varchar(255),
     "Total Aerospace Exports" varchar(255),
-    "Total Aerospace Imports" decimal(10,2),
+    "Total Aerospace Imports" varchar(255),
     "Balance of Total Aerospace Trade" varchar(255),
     "Top Foreign Market" varchar(255),
     "2nd Top Foreign Market" varchar(255),
