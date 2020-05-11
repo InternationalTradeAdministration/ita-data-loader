@@ -4,23 +4,17 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 build-id: n/a
-
 ---
 spring:
   profiles: staging
+  jpa:
+    show-sql: false
+    format_sql: true
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  datasource:
-    url: ${FLYWAY_URL}
-    username: ${FLYWAY_USER}
-    password: ${FLYWAY_PASSWORD}
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 storage-params:
   azure-storage-account: ${AZURE_STORAGE_ACCOUNT}
   azure-storage-account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
@@ -40,10 +34,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  datasource:
-    url: ${FLYWAY_URL}
-    username: ${FLYWAY_USER}
-    password: ${FLYWAY_PASSWORD}
   security:
     oauth2:
       client:

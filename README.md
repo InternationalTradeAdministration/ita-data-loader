@@ -86,20 +86,12 @@ Steps to run this application on your local machine for development purposes.
 - AZURE_OAUTH_TENANT_ID: Active Directory Tenant ID
 - AZURE_STORAGE_ACCOUNT: Blob Storage Account
 - AZURE_STORAGE_ACCOUNT_KEY: Blob Storage Account Key
-- FLYWAY_URL: The jdbc connection to a AZURE SQL Database
-- FLYWAY_USER: Username to the AZURE SQL Database
-- FLYWAY_PASSWORD: Password to the AZURE SQL Database
 - DATAFACTORY_CLIENT_ID: Client ID for the data facotry App Registration
 - DATAFACTORY_CLIENT_SECRET: Client Secret for the data facotry App Registration
 - DATAFACTORY_NAME: The name of the data factory
 - DATAFACTORY_RESOURCE_GROUP: The resource group for the data factory
 - AZURE_TENANT_ID: The Azure tenant id the datafactory is in
 - AZURE_SUBSCRIPTION_ID: The Azure subscription id the datafactory is in
-
-## Database Notes
-
-- Flyway is used to manage the state of the database, that's all. This application does not otherwise interact with the database
-- SQL Scripts for updating the Database can be found here:  /src/main/resources/db/migration
 
 ## Additional Notes
 
