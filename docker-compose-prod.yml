@@ -1,7 +1,0 @@
-version: '3'
-services:
-  ita-dataloader:
-    image: itadrupalprodeast1.azurecr.io/ita-dataloader:latest
-    build:
-      context: docker
-      dockerfile: Dockerfile

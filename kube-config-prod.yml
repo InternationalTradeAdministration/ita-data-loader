@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: ita-dataloader
-        image: itadrupalprodeast1.azurecr.io/ita-dataloader:#{Release.Artifacts._InternationalTradeAdministration.ita-dataloader.BuildId}#
+        image: itasharedappregistryprodeast1.azurecr.io/ita-dataloader:#{Release.Artifacts._InternationalTradeAdministration.ita-dataloader.BuildId}#
         imagePullPolicy: Always
         ports:
         - containerPort: 80
