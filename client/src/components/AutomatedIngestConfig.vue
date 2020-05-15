@@ -64,6 +64,7 @@ export default {
   }),
   async created() {
     let config = await this.repository._getAutomatedIngestConfig(this.containerName).catch(error => {
+      console.error(error)
       return {
         dataSetConfigs: []
       }

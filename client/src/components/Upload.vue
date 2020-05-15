@@ -180,7 +180,6 @@
 <script>
 import Menu from "./Menu";
 import Header from "./Header";
-import { readUploadedFileAsArrayBuffer } from "./FileHelper";
 
 export default {
   name: "Upload",
@@ -291,7 +290,7 @@ export default {
 
       const formData = new FormData();
       formData.append("file", this.fileBlob, this.destinationFileName);
-      const message = await this.repository._save(
+      await this.repository._save(
         this.containerName,
         this.containsPii,
         formData

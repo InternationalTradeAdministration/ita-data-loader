@@ -42,9 +42,6 @@
   </div>
 </template>
 <script>
-import beautify from "json-beautify";
-import Repository from "@/utils/Repository";
-
 export default {
   name: "DataloaderAdminConfig",
   props: ["repository"],
@@ -59,10 +56,7 @@ export default {
   },
   methods: {
     async saveConfiguration() {
-      let configSaveResponse = await this.repository._saveDataloaderAdminConfig(
-        this.businessUnits
-      );
-
+      await this.repository._saveDataloaderAdminConfig(this.businessUnits);
       this.configSaved = true;
     }
   }

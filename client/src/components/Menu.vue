@@ -21,6 +21,10 @@
   </nav>
 </template>
 <style>
+.md-list {
+  padding: 0;
+}
+
 .nav-menu {
   background: #8b9197;
   height: 100vh;

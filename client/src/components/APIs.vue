@@ -48,7 +48,6 @@
 <script>
 import Menu from "./Menu";
 import Header from "./Header";
-import beautify from "json-beautify";
 
 export default {
   name: "APIs",
