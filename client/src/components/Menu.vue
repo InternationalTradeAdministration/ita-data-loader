@@ -1,28 +1,42 @@
 <template>
   <nav class="nav-menu">
-    <md-list class="menu-list-items">
-      <md-list-item :class="getClasses('Upload')" @click="goTo('Upload')">
+    <ul>
+      <li :class="getClasses('Upload')" @click="goTo('Upload')">
         <md-icon id="menu-icon">arrow_upward</md-icon>
-        <span class="md-list-item-text">Upload</span>
-      </md-list-item>
-      <md-list-item :class="getClasses('Config')" @click="goTo('Config')">
+        <span>Upload</span>
+      </li>
+      <li :class="getClasses('Config')" @click="goTo('Config')">
         <md-icon id="menu-icon">settings_applications</md-icon>
-        <span class="md-list-item-text">Configure</span>
-      </md-list-item>
-      <md-list-item :class="getClasses('SystemLogs')" @click="goTo('SystemLogs')">
+        <span>Configure</span>
+      </li>
+      <li :class="getClasses('SystemLogs')" @click="goTo('SystemLogs')">
         <md-icon id="menu-icon">menu_book</md-icon>
-        <span class="md-list-item-text">Log</span>
-      </md-list-item>
-      <md-list-item :class="getClasses('APIs')" @click="goTo('APIs')">
+        <span>Log</span>
+      </li>
+      <li :class="getClasses('APIs')" @click="goTo('APIs')">
         <md-icon id="menu-icon">developer_mode</md-icon>
-        <span class="md-list-item-text">APIs</span>
-      </md-list-item>
-    </md-list>
+        <span>APIs</span>
+      </li>
+    </ul>
   </nav>
 </template>
-<style>
-.md-list {
+<style scoped>
+ul {
+  list-style-type: none;
   padding: 0;
+  margin: 0;
+}
+
+li {
+  background: #8b9197;
+  color: white;
+  margin-left: 10px;
+  cursor: pointer;
+  margin: 0;
+  padding-left: 14px;
+  display: flex;
+  padding-top: 10px;
+  height: 46px;
 }
 
 .nav-menu {
@@ -36,22 +50,9 @@
   width: 156px;
 }
 
-.menu-list-items {
-  padding: 0;
-}
-
-.menu-li {
-  background: #8b9197;
-}
-
-.md-list-item-text {
-  color: white;
-  margin-left: 10px;
-}
-
 #menu-icon {
   color: white;
-  margin: 0 5px 0 0;
+  margin: 0 16px 0 0;
 }
 
 .menu-li.current-route {

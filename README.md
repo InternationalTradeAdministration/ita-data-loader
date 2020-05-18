@@ -25,13 +25,12 @@ Steps to run this application on your local machine for development purposes.
 
 ## Test
 
-- Backend: `./gradlew test`
-- Frontend:  `cd client && npm test`
+- `./gradlew test`
 
 ## Build Scripts
 
--Application: `./build.sh`
--Container: `./build-push-docker-image.sh`
+- Application: `./build.sh`
+- Container: `./build-push-docker-image.sh`
 
 ## Azure Configuration
 
@@ -95,11 +94,11 @@ Steps to run this application on your local machine for development purposes.
 
 ## Additional Notes
 
-Once the application is initialized, a system administrator needs to be set. 
- 1. Go to the application URL (ex: https://dataloader-itadev2.vangos-cloudapp.us/#/)
+Once the application is initialized, a system administrator needs to be set.
+
+ 1. Go to the application URL (ex: <https://dataloader-itadev2.vangos-cloudapp.us/#/)>
  1. Select "Dataloader ADMIN"
  1. Add the trade.gov email address of a system administrator to the Dataloader ADMIN "Business Unit"
  1. Click Save
- 
+
  ![Dataloader ADMIN Configuration](/screenshots/admin-panel.png)
- 

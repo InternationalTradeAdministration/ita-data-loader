@@ -48,12 +48,14 @@ export default {
   }),
   methods: {
     updateBusinessUnitContent() {
-      this.$router.push({
-        name: this.$route.name,
-        params: {
-          containerName: this.containerName
-        }
-      });
+      if (this.$route.path !== "/") {
+        this.$router.push({
+          name: this.$route.name,
+          params: {
+            containerName: this.containerName
+          }
+        });
+      }
       this.updateContainerFn(this.containerName)
     },
     async getVersion() {
