@@ -79,11 +79,11 @@ public class AutomatedIngestProcessorTest {
       .makeSnapshot("a-container", "really-rad.csv");
 
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "rad.csv", RAD_BYTES);
+      .process("a-container", "rad.csv", RAD_BYTES);
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "very-rad.csv", VERY_RAD_BYTES);
+      .process("a-container", "very-rad.csv", VERY_RAD_BYTES);
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "really-rad.csv", REALLY_RAD_BYTES);
+      .process("a-container", "really-rad.csv", REALLY_RAD_BYTES);
   }
 
   @Test
@@ -103,7 +103,7 @@ public class AutomatedIngestProcessorTest {
     verify(storage, times(1))
       .makeSnapshot("a-container", "vangos.csv");
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "vangos.csv", "The best sport is football!".getBytes());
+      .process("a-container", "vangos.csv", "The best sport is football!".getBytes());
   }
 
   @Test
@@ -128,11 +128,11 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "vangos.zip", ZIP_FILE_BYTES);
+      .process("a-container", "vangos.zip", ZIP_FILE_BYTES);
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "Hobbies_A.csv", "My favorite hobby is hiking!".getBytes());
+      .process("a-container", "Hobbies_A.csv", "My favorite hobby is hiking!".getBytes());
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "Hobbies_B.csv", "My favorite hobby is climbing!".getBytes());
+      .process("a-container", "Hobbies_B.csv", "My favorite hobby is climbing!".getBytes());
   }
 
   @Test
@@ -154,9 +154,9 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "vangos.zip", ZIP_FILE_BYTES);
+      .process("a-container", "vangos.zip", ZIP_FILE_BYTES);
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "Skipped_Hobbies.csv", " and more \n never ending bytes\n".getBytes());
+      .process("a-container", "Skipped_Hobbies.csv", " and more \n never ending bytes\n".getBytes());
   }
 
   @Test
@@ -168,9 +168,9 @@ public class AutomatedIngestProcessorTest {
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
 
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "rad.csv", RAD_BYTES);
+      .process("a-container", "rad.csv", RAD_BYTES);
     verify(translationProcessor, times(1))
-      .initProcessing("a-container", "rad.csv", RAD_BYTES);
+      .process("a-container", "rad.csv", RAD_BYTES);
   }
 
   @Test

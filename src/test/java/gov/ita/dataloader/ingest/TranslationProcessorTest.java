@@ -48,7 +48,7 @@ public class TranslationProcessorTest {
     when(translator.translate(thirdPartition)).thenReturn(THIRD_TRANSLATED_BYTES);
 
     TranslationProcessor translationProcessor = new TranslationProcessor(storage, translatorFactory);
-    translationProcessor.initProcessing("some-container", "some-file-name.csv", wholeFile);
+    translationProcessor.process("some-container", "some-file-name.csv", wholeFile);
 
     verify(storage).delete("some-container", "translated/some-file-name.csv");
     verify(storage).save(anyString(), eq(FIRST_TRANSLATED_BYTES), eq("system"), eq("some-container"), eq(true), eq(false));

@@ -138,7 +138,7 @@ public class AutomatedIngestProcessor {
     updateLog(containerName, String.format("Saving %s", fileName));
     storage.save(fileName, fileBytes, userName, containerName, false, false);
     storage.makeSnapshot(containerName, fileName);
-    translationProcessor.initProcessing(containerName, fileName, fileBytes);
+    translationProcessor.process(containerName, fileName, fileBytes);
   }
 
   private byte[] skipLines(byte[] fileBytes, Integer skipLineCount) {

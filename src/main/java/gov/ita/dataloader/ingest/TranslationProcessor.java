@@ -28,11 +28,7 @@ public class TranslationProcessor {
     return translatorFactory.getTranslator(containerFileCompositeKey) != null;
   }
 
-  public void initProcessing(String containerName, String fileName, byte[] fileBytes) {
-    process(containerName, fileName, fileBytes);
-  }
-
-  private CompletableFuture<String> process(String containerName, String fileName, byte[] fileBytes) {
+  public CompletableFuture<String> process(String containerName, String fileName, byte[] fileBytes) {
     String containerFileCompositeKey = containerName + "#" + fileName;
     String fileRootName = "translated/" + fileName;
 

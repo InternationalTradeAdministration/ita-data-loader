@@ -26,7 +26,7 @@ public class ManualIngestProcessor {
   public CompletableFuture<String> process(String containerName, String fileName, byte[] fileBytes) {
     if (translationProcessor.hasTranslator(containerName, fileName)) {
       updateLog(containerName, String.format("Translating file: %s", fileName));
-      translationProcessor.initProcessing(containerName, fileName, fileBytes);
+      translationProcessor.process(containerName, fileName, fileBytes);
     }
     dataFactoryGateway.runPipeline(containerName);
     updateLog(containerName, String.format("Completed uploading file: %s", fileName));
