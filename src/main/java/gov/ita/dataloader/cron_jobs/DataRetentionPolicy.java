@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -16,16 +15,16 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 public class DataRetentionPolicy {
 
-  private Storage storage;
-  private BusinessUnitService businessUnitService;
-  private OffsetDateTime today;
-  private static Integer PII_DATA_RETENTION_YEARS = 6;
-  private static Integer NON_PII_DATA_RETENTION_MONTHS = 13;
+  private final Storage storage;
+  private final BusinessUnitService businessUnitService;
+  private final DateHelper dateHelper;
+  private static final Integer PII_DATA_RETENTION_YEARS = 6;
+  private static final Integer NON_PII_DATA_RETENTION_MONTHS = 13;
 
-  public DataRetentionPolicy(Storage storage, BusinessUnitService businessUnitService, OffsetDateTime today) {
+  public DataRetentionPolicy(Storage storage, BusinessUnitService businessUnitService, DateHelper dateHelper) {
     this.storage = storage;
     this.businessUnitService = businessUnitService;
-    this.today = today;
+    this.dateHelper = dateHelper;
   }
 
   @Scheduled(cron = "0 1 0 * * ?")
@@ -35,7 +34,7 @@ public class DataRetentionPolicy {
       List<BlobMetaData> blobMetadata = storage.getBlobMetadata(container, true);
       blobMetadata.forEach(b -> {
         if (b.getSnapshot() != null && b.getMetadata() != null && b.getMetadata().get("pii") != null) {
-          long ageInDays = DAYS.between(b.getUploadedAt(), today);
+          long ageInDays = DAYS.between(b.getUploadedAt(), dateHelper.now());
           if (b.getMetadata().get("pii").equals("true") && ageInDays > (PII_DATA_RETENTION_YEARS * 365)) {
             log.info("Deleting file, {} {} is older than 6 years", b.getFileName(), b.getSnapshot());
             storage.delete(b.getContainerName(), b.getFileName(), b.getSnapshot());

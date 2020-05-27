@@ -20,9 +20,4 @@ public class DevelopmentBusinessUnitController {
     return businessUnitService.getBusinessUnits();
   }
 
-  @GetMapping(value = "/api/storage-containers", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<String> getStorageContainers() throws Exception {
-    return businessUnitService.getStorageContainers();
-  }
-
 }

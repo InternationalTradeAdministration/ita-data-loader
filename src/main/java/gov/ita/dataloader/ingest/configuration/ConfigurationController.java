@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequestMapping(value = "/api/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ConfigurationController {
 
   @Autowired
@@ -22,18 +23,17 @@ public class ConfigurationController {
   @Autowired
   private AuthenticationFacade authenticationFacade;
 
-  @GetMapping(value = "/api/automated-ingest/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping("/automated-ingest")
   private byte[] getAutomatedIngestConfiguration(@RequestParam("containerName") String containerName) {
     return storage.getBlob(containerName, "configuration.json");
   }
 
-  @GetMapping(value = "/api/dataloader-admin/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping("/dataloader-admin")
   private byte[] getDataloaderAdminConfiguration() {
     return storage.getBlob("dataloader", "configuration.json");
   }
 
-  //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
-  @PutMapping("/api/dataloader-admin/configuration")
+  @PutMapping("/dataloader-admin")
   public void saveAdminConfiguration(@RequestBody DataloaderAdminConfiguration dataloaderAdminConfiguration) throws JsonProcessingException {
     log.info("Saving Dataloader ADMIN configuration.json");
     byte[] dataSetConfigsJsonBytes = objectMapper.writeValueAsString(dataloaderAdminConfiguration).getBytes();
@@ -41,8 +41,7 @@ public class ConfigurationController {
     storage.makeSnapshot("dataloader", "configuration.json");
   }
 
-  //  @PreAuthorize("hasRole('ROLE_TSI_AllUsers')")
-  @PutMapping("/api/automated-ingest/configuration")
+  @PutMapping("/automated-ingest")
   public void saveAutomatedIngestConfiguration(@RequestBody AutomatedIngestConfiguration automatedIngestConfiguration,
                                                @RequestParam("containerName") String containerName) throws JsonProcessingException {
     log.info("Saving {} configuration.json", containerName);

@@ -10,19 +10,19 @@
       <dataloader-menu :containerName="containerName" />
       <div class="sub-content">
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-25">
+          <div class="md-layout-item md-size-20">
             <md-field>
               <label>Select file</label>
               <md-file @md-change="onFileSelection($event)"></md-file>
             </md-field>
           </div>
-          <div class="md-layout-item md-size-25">
+          <div class="md-layout-item md-size-20">
             <md-autocomplete v-model="destinationFileName" :md-options="destinationFileNameOptions">
               <label>File name</label>
             </md-autocomplete>
           </div>
           <div class="md-layout-item md-size-50">
-            <md-checkbox v-model="containsPii">Contains PII</md-checkbox>
+            <md-checkbox v-model="containsPii" v-if="!loading && !isContainerPublic">Contains PII</md-checkbox>
             <md-button
               class="md-raised md-dense top-btn"
               @click="updateBusinessUnitContent()"
@@ -35,21 +35,24 @@
             <md-progress-spinner class="spinner" v-if="uploading" md-mode="indeterminate" :md-diameter="30"></md-progress-spinner>
           </div>
         </div>
-        <div v-if="loading" class="loading">
-          <md-progress-bar md-mode="indeterminate"></md-progress-bar>
-        </div>
-        <div v-if="!loading" class="md-layout md-gutter">
+        <div v-if="loading" class="loading">loading...</div>
+        <div v-else class="md-layout md-gutter">
           <div class="md-layout-item md-size-100">
             <span class="stat">
-              <strong>TOTAL FILES:</strong>
+              <strong>CONTAINER TYPE: </strong>
+              <span v-if="isContainerPublic">Public</span>
+              <span v-else>Private</span>
+            </span>
+            <span class="stat">
+              <strong>TOTAL FILES: </strong>
               {{totalFiles}}
             </span>
             <span class="stat">
-              <strong>UPLOADS:</strong>
+              <strong>UPLOADS: </strong>
               {{totalManualUploads}}
             </span>
             <span class="stat">
-              <strong>PIPELINE:</strong>
+              <strong>PIPELINE: </strong>
               <span v-if="!['Succeeded', 'InProgress', 'n/a'].includes(this.pipelineStatus.status)">
                 <a @click="displayPipelineMessage = true" href="#">Error</a>
               </span>
@@ -169,6 +172,7 @@
 }
 
 .spinner {
+  margin-top: 16px;
   margin-left: 20px;
 }
 
@@ -201,12 +205,11 @@ export default {
     }
 
     await this.updateBusinessUnitContent();
-
-    this.loading = false;
   },
   data() {
     return {
       containerName: null,
+      isContainerPublic: false,
       businessUnitName: null,
       businessUnits: [],
       storageMetadata: [],
@@ -258,6 +261,10 @@ export default {
         file => file.metadata.user_upload === "true"
       ).length;
 
+      this.isContainerPublic = await this.repository._isContainerPublic(this.containerName)
+
+      this.loading = false;
+
       this.pipelineStatus = await this.repository._getPipelineStatus(
         this.containerName
       );
@@ -265,7 +272,7 @@ export default {
       if (this.pipelineStatus == null) {
         this.pipelineStatus = { status: "n/a", message: "", runEnd: "" };
       }
-      this.loading = false;
+
     },
     onFileSelection(event) {
       this.fileBlob = event[0];

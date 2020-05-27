@@ -35,9 +35,11 @@ public class ProductionStorage implements Storage {
   private HttpHelper httpHelper;
 
   @Override
-  public void createContainer(String containerName) {
+  public void createContainer(String containerName, Boolean isPublic) {
     log.info("Creating container: {}", containerName);
-    makeBlobServiceClient().createBlobContainer(containerName);
+    PublicAccessType publicAccessType = (isPublic) ? PublicAccessType.BLOB : null;
+    BlobContainerClient blobContainer = makeBlobServiceClient().createBlobContainer(containerName);
+    blobContainer.setAccessPolicy(publicAccessType, null);
   }
 
   @Override
@@ -60,15 +62,6 @@ public class ProductionStorage implements Storage {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  @Override
-  public String getListBlobsUrl(String containerName) {
-    return makeBaseStorageUrl(containerName) + "?restype=container&comp=list";
-  }
-
-  private String makeBaseStorageUrl(String containerName) {
-    return String.format("https://%s.blob.core.windows.net/%s", accountName, containerName);
   }
 
   @Override
@@ -147,6 +140,12 @@ public class ProductionStorage implements Storage {
         getBlobContainerClient(containerName).getBlobClient(b.getFileName()).delete();
       }
     }
+  }
+
+  @Override
+  public Boolean isPublic(String containerName) {
+    PublicAccessType blobAccessType = getBlobContainerClient(containerName).getAccessPolicy().getBlobAccessType();
+    return (blobAccessType == PublicAccessType.BLOB || blobAccessType == PublicAccessType.CONTAINER);
   }
 
   private String buildUrlForBlob(String containerName, String blobName, String snapshot) {

@@ -1,8 +1,8 @@
 const axios = require('axios')
 
 export default class Repository {
-  async _save (containerName, pii, file) {
-    const fileSaveResponse = await axios.put('/api/file',
+  async _save(containerName, pii, file) {
+    const fileSaveResponse = await axios.put('/api/ingest/file',
       file,
       {
         params: {
@@ -13,13 +13,13 @@ export default class Repository {
     return fileSaveResponse.data
   }
 
-  async _getBusinessUnits () {
+  async _getBusinessUnits() {
     const businessUnitResponse = await axios.get('/api/business-units')
     return businessUnitResponse.data
   }
 
-  async _getAutomatedIngestConfig (containerName) {
-    const dataSetConfigsResponse = await axios.get('/api/automated-ingest/configuration', {
+  async _getAutomatedIngestConfig(containerName) {
+    const dataSetConfigsResponse = await axios.get('/api/configuration/automated-ingest', {
       params: {
         containerName
       }
@@ -28,20 +28,20 @@ export default class Repository {
     return dataSetConfigsResponse.data
   }
 
-  async _getDataloaderAdminConfig () {
-    const dataSetConfigsResponse = await axios.get('/api/dataloader-admin/configuration')
+  async _getDataloaderAdminConfig() {
+    const dataSetConfigsResponse = await axios.get('/api/configuration/dataloader-admin')
     return dataSetConfigsResponse.data
   }
 
-  async _saveDataloaderAdminConfig (businessUnits) {
-    const configSaveResponse = await axios.put('/api/dataloader-admin/configuration', {
+  async _saveDataloaderAdminConfig(businessUnits) {
+    const configSaveResponse = await axios.put('/api/configuration/dataloader-admin', {
       businessUnits
     })
     return configSaveResponse
   }
 
-  async _saveAutomatedIngestConfig (dataSetConfigs, containerName) {
-    const configSaveResponse = await axios.put('/api/automated-ingest/configuration',
+  async _saveAutomatedIngestConfig(dataSetConfigs, containerName) {
+    const configSaveResponse = await axios.put('/api/configuration/automated-ingest',
       {
         dataSetConfigs
       },
@@ -54,8 +54,8 @@ export default class Repository {
     return configSaveResponse
   }
 
-  async _getStorageMetadata (containerName) {
-    const storageMetadataResponse = await axios.get('/api/container-metadata', {
+  async _getStorageMetadata(containerName) {
+    const storageMetadataResponse = await axios.get('/api/storage/container/blobs', {
       params: {
         containerName
       }
@@ -64,8 +64,8 @@ export default class Repository {
     return storageMetadataResponse.data
   }
 
-  async _startAutomatedIngestProcess (containerName, dataSetConfigs) {
-    const ingestProcessResponse = await axios.post('/api/ingest', {
+  async _startAutomatedIngestProcess(containerName, dataSetConfigs) {
+    const ingestProcessResponse = await axios.post('/api/ingest/process', {
       dataSetConfigs
     }, {
       params: {
@@ -76,8 +76,8 @@ export default class Repository {
     return ingestProcessResponse.data
   }
 
-  async _getAutomatedIngestStatus (containerName) {
-    const ingestStatusResponse = await axios.get('/api/automated-ingest/status', {
+  async _getAutomatedIngestStatus(containerName) {
+    const ingestStatusResponse = await axios.get('/api/ingest/automated/status', {
       params: {
         containerName
       }
@@ -85,24 +85,24 @@ export default class Repository {
     return ingestStatusResponse.data
   }
 
-  _clearAutomatedIngestStatus (containerName) {
-    axios.get('/api/automated-ingest/log/clear', {
+  _clearAutomatedIngestStatus(containerName) {
+    axios.get('/api/ingest/automated/log/clear', {
       params: {
         containerName
       }
     })
   }
 
-  _stopAutomatedIngestProcess (containerName) {
-    axios.get('/api/automated-ingest/stop', {
+  _stopAutomatedIngestProcess(containerName) {
+    axios.get('/api/ingest/automated/stop', {
       params: {
         containerName
       }
     })
   }
 
-  async _getManualIngestStatus (containerName) {
-    const ingestStatusResponse = await axios.get('/api/manual-ingest/status', {
+  async _getManualIngestStatus(containerName) {
+    const ingestStatusResponse = await axios.get('/api/ingest/manual/status', {
       params: {
         containerName
       }
@@ -110,15 +110,15 @@ export default class Repository {
     return ingestStatusResponse.data
   }
 
-  _clearManualIngestStatus (containerName) {
-    axios.get('/api/manual-ingest/log/clear', {
+  _clearManualIngestStatus(containerName) {
+    axios.get('/api/ingest/manual/log/clear', {
       params: {
         containerName
       }
     })
   }
 
-  async _runPipeline (pipelineName) {
+  async _runPipeline(pipelineName) {
     const pipelineStatusResponse = await axios.get('/api/data-factory/run-pipeline', {
       params: {
         pipelineName
@@ -127,7 +127,7 @@ export default class Repository {
     return pipelineStatusResponse.data ? pipelineStatusResponse.data : null
   }
 
-  async _getPipelineStatus (pipelineName) {
+  async _getPipelineStatus(pipelineName) {
     const pipelineStatusResponse = await axios.get('/api/data-factory/pipeline-status', {
       params: {
         pipelineName
@@ -136,8 +136,8 @@ export default class Repository {
     return pipelineStatusResponse.data ? pipelineStatusResponse.data : null
   }
 
-  async _deleteBlob (containerName, fileName, snapshot) {
-    await axios.delete('/api/file', {
+  async _deleteBlob(containerName, fileName, snapshot) {
+    await axios.delete('/api/storage/file', {
       params: {
         containerName,
         fileName,
@@ -146,13 +146,13 @@ export default class Repository {
     })
   }
 
-  async _version () {
+  async _version() {
     const version = await axios.get('/api/version')
     return version.data
   }
 
-  async _downloadBlob (containerName, blobName, snapshot) {
-    axios.post('/api/download-blob', {
+  async _downloadBlob(containerName, blobName, snapshot) {
+    axios.post('/api/storage/download', {
       containerName, blobName, snapshot
     }, {
       responseType: 'blob'
@@ -165,5 +165,14 @@ export default class Repository {
       document.body.appendChild(link)
       link.click()
     })
+  }
+
+  async _isContainerPublic(containerName) {
+    return axios.get('/api/storage/container/public', {
+      params: {
+        containerName
+      }
+    }).then(response => response.data)
+
   }
 }

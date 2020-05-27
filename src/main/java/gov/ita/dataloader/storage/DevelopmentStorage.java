@@ -12,10 +12,10 @@ import java.util.*;
 @Profile("development")
 public class DevelopmentStorage implements Storage {
 
-  private Map<String, Map<String, byte[]>> storageContent = new HashMap<>();
+  private final Map<String, Map<String, byte[]>> storageContent = new HashMap<>();
 
   @Override
-  public void createContainer(String containerName) {
+  public void createContainer(String containerName, Boolean isPublic) {
 
   }
 
@@ -29,11 +29,6 @@ public class DevelopmentStorage implements Storage {
 
     containerContent.put(fileName, fileContent);
     storageContent.put(containerName, containerContent);
-  }
-
-  @Override
-  public String getListBlobsUrl(String containerName) {
-    return "http://cool.io";
   }
 
   @Override
@@ -107,5 +102,10 @@ public class DevelopmentStorage implements Storage {
   @Override
   public void delete(String containerName, String blobPattern) {
     delete(containerName, blobPattern, null);
+  }
+
+  @Override
+  public Boolean isPublic(String containerName) {
+    return false;
   }
 }

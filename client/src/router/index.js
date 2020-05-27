@@ -2,7 +2,6 @@ import Router from 'vue-router'
 import Upload from '@/components/Upload'
 import Config from '@/components/Config'
 import SystemLogs from '@/components/SystemLogs'
-import APIs from '@/components/APIs'
 
 export default function router (repository) {
   return new Router({
@@ -35,10 +34,6 @@ export default function router (repository) {
         props: {
           repository
         }
-      }, {
-        path: '/apis/:containerName',
-        name: 'APIs',
-        component: APIs
       }
     ]
   })

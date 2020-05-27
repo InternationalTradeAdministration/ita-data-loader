@@ -13,9 +13,8 @@ import java.util.stream.Collectors;
 @Profile("production")
 public class ProductionBusinessUnitController {
 
-  private AuthenticationFacade authenticationFacade;
-
-  private BusinessUnitService businessUnitService;
+  private final AuthenticationFacade authenticationFacade;
+  private final BusinessUnitService businessUnitService;
 
   public ProductionBusinessUnitController(AuthenticationFacade authenticationFacade,
                                           BusinessUnitService businessUnitService) {
@@ -36,11 +35,6 @@ public class ProductionBusinessUnitController {
     } else {
       return businessUnits.stream().filter(businessUnit -> businessUnit.includes(user)).collect(Collectors.toList());
     }
-  }
-
-  @GetMapping(value = "/api/storage-containers", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<String> getStorageContainers() throws Exception {
-    return businessUnitService.getStorageContainers();
   }
 
 }

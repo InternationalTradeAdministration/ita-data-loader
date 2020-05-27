@@ -13,10 +13,6 @@
         <md-icon id="menu-icon">menu_book</md-icon>
         <span>Log</span>
       </li>
-      <li :class="getClasses('APIs')" @click="goTo('APIs')">
-        <md-icon id="menu-icon">developer_mode</md-icon>
-        <span>APIs</span>
-      </li>
     </ul>
   </nav>
 </template>

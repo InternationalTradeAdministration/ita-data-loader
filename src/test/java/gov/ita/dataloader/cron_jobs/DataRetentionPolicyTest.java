@@ -23,6 +23,8 @@ public class DataRetentionPolicyTest {
   private Storage storage;
   @Mock
   private BusinessUnitService businessUnitService;
+  @Mock
+  private DateHelper dateHelper;
 
   TestHelpers h = new TestHelpers();
 
@@ -43,7 +45,9 @@ public class DataRetentionPolicyTest {
     when(storage.getBlobMetadata("comic-container", true)).thenReturn(comicPii);
     when(storage.getBlobMetadata("matrix-container", true)).thenReturn(matrixNonPii);
 
-    DataRetentionPolicy dataRetentionPolicy = new DataRetentionPolicy(storage, businessUnitService, h.datetimeOf(2026, 1));
+    when(dateHelper.now()).thenReturn(h.datetimeOf(2026, 1));
+
+    DataRetentionPolicy dataRetentionPolicy = new DataRetentionPolicy(storage, businessUnitService, dateHelper);
     dataRetentionPolicy.purgeExpiredData();
   }
 

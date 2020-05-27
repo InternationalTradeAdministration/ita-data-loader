@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface Storage {
-  void createContainer(String containerName);
+  void createContainer(String containerName, Boolean isPublic);
 
   void save(String fileName, byte[] fileContent, String user, String containerName, Boolean userUpload, Boolean pii);
-
-  String getListBlobsUrl(String containerName);
 
   List<BlobMetaData> getBlobMetadata(String containerName, Boolean withSnapshots);
 
@@ -24,4 +22,5 @@ public interface Storage {
 
   void delete(String containerName, String blobPattern);
 
+  Boolean isPublic(String containerName);
 }
