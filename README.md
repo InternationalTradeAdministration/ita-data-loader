@@ -67,7 +67,7 @@ Steps to run this application on your local machine for development purposes.
     ```
 
 1. Create a Data Factory using the [Azure Portal](https://portal.azure.com) and deploy the configuration using this
-[repository](https://github.com/InternationalTradeAdministration/ita-datafactory-config)
+[repository](https://dev.azure.com/InternationalTradeAdministration/Data%20Services/_git/mds-datafactory-config)
 1. Create an App Registration for the Data Factory with the Contributor Role, a sample manifest is located [here](/manifests/sample-data-factory-app-registration.json)
 1. Create a Container Registry, skip this step if you already have one you would like to use
 
