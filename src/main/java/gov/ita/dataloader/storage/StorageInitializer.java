@@ -6,7 +6,6 @@ import gov.ita.dataloader.ingest.configuration.BusinessUnit;
 import gov.ita.dataloader.ingest.configuration.DataloaderAdminConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

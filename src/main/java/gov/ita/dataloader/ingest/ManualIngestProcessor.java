@@ -1,6 +1,6 @@
 package gov.ita.dataloader.ingest;
 
-import gov.ita.dataloader.datafactory.DataFactoryGateway;
+import gov.ita.dataloader.data_factory.DataFactoryGateway;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

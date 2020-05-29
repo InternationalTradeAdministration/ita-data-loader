@@ -1,4 +1,4 @@
-package gov.ita.dataloader.datafactory;
+package gov.ita.dataloader.data_factory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;

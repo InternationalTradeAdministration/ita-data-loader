@@ -1,5 +1,6 @@
-package gov.ita.dataloader.datafactory;
+package gov.ita.dataloader.data_factory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class DataFactoryController {
   private DataFactoryGateway dataFactoryGateway;
 
   @GetMapping("/pipeline-status")
-  public PipelineRun getPipelineStatus(@RequestParam("pipelineName") String pipelineName) {
+  public PipelineRun getPipelineStatus(@RequestParam("pipelineName") String pipelineName) throws JsonProcessingException {
     return dataFactoryGateway.getPipelineStatus(pipelineName);
   }
 

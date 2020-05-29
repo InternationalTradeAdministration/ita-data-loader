@@ -1,7 +1,7 @@
 package gov.ita.dataloader.ingest;
 
 import gov.ita.dataloader.HttpHelper;
-import gov.ita.dataloader.datafactory.DataFactoryGateway;
+import gov.ita.dataloader.data_factory.DataFactoryGateway;
 import gov.ita.dataloader.ingest.configuration.DataSetConfig;
 import gov.ita.dataloader.ingest.configuration.ReplaceValue;
 import gov.ita.dataloader.ingest.configuration.ZipFileConfig;

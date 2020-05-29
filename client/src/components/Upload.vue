@@ -21,7 +21,7 @@
               <label>File name</label>
             </md-autocomplete>
           </div>
-          <div class="md-layout-item md-size-50">
+          <div class="md-layout-item md-size-60">
             <md-checkbox v-model="containsPii" v-if="!loading && !isContainerPublic">Contains PII</md-checkbox>
             <md-button
               class="md-raised md-dense top-btn"
@@ -32,32 +32,39 @@
               class="md-primary md-raised md-dense top-btn"
               @click="uploadFile()"
             >Upload</md-button>
-            <md-progress-spinner class="spinner" v-if="uploading" md-mode="indeterminate" :md-diameter="30"></md-progress-spinner>
+            <md-progress-spinner
+              class="spinner"
+              v-if="uploading"
+              md-mode="indeterminate"
+              :md-diameter="30"
+            ></md-progress-spinner>
           </div>
         </div>
         <div v-if="loading" class="loading">loading...</div>
         <div v-else class="md-layout md-gutter">
           <div class="md-layout-item md-size-100">
             <span class="stat">
-              <strong>CONTAINER TYPE: </strong>
+              <strong>CONTAINER TYPE:</strong>
               <span v-if="isContainerPublic">Public</span>
               <span v-else>Private</span>
             </span>
             <span class="stat">
-              <strong>TOTAL FILES: </strong>
+              <strong>TOTAL FILES:</strong>
               {{totalFiles}}
             </span>
             <span class="stat">
-              <strong>UPLOADS: </strong>
+              <strong>UPLOADS:</strong>
               {{totalManualUploads}}
             </span>
             <span class="stat">
-              <strong>PIPELINE: </strong>
+              <strong>PIPELINE:</strong>
               <span v-if="!['Succeeded', 'InProgress', 'n/a'].includes(this.pipelineStatus.status)">
-                <a @click="displayPipelineMessage = true" href="#">Error</a>
+                <a
+                  @click="alertPipelineErrorMessage()"
+                  href="#"
+                >Error-{{this.pipelineStatus.runEnd}}</a>
               </span>
-              <span v-else>{{this.pipelineStatus.status}}</span>
-              <span>{{this.pipelineStatus.runEnd}}</span>
+              <span v-else>Succeeded-{{this.pipelineStatus.runEnd}}</span>
             </span>
             <md-switch
               class="display-switch"
@@ -110,36 +117,16 @@
             </md-table-row>
           </md-table>
         </div>
-        <div class="user-feedback">
-          <md-dialog-alert
-            :md-active.sync="uploadSuccessful"
-            md-title="Upload Successful!"
-            md-content="Your file was uploaded successfully! To view the progress of any translations, see the log."
-            md-confirm-text="Close"
-          />
-          <md-dialog-alert
-            :md-active.sync="errorOccured"
-            md-title="Upload Error!"
-            :md-content="errorMessage"
-            md-confirm-text="Close"
-          />
-          <md-dialog-alert
-            :md-active.sync="displayPipelineMessage"
-            md-title="Pipeline Error!"
-            :md-content="pipelineStatus.message"
-            md-confirm-text="Close"
-          />
-        </div>
       </div>
     </div>
+    <dialog ref="upload-success-dialog">
+      <h2>Upload Successful</h2>
+      <p>Your file was uploaded successfully! To view the progress of any translations, see the log.</p>
+      <button @click="closeUploadSuccessDialog()">Close</button>
+    </dialog>
   </div>
 </template>
 <style>
-.user-feedback {
-  display: flex;
-  justify-content: center;
-}
-
 .uploading {
   margin-top: 20px;
   display: flex;
@@ -180,6 +167,21 @@
   font-size: 12px;
   margin-right: 16px;
 }
+
+.stat strong {
+  margin-right: 4px;
+}
+
+dialog {
+  top: 40vh;
+  border-radius: 5px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+dialog + .backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+}
 </style>
 <script>
 import Menu from "./Menu";
@@ -217,9 +219,6 @@ export default {
       originalFileName: null,
       destinationFileName: null,
       containsPii: false,
-      errorOccured: false,
-      errorMessage: null,
-      uploadSuccessful: false,
       uploading: false,
       fileBlob: null,
       loading: true,
@@ -261,7 +260,9 @@ export default {
         file => file.metadata.user_upload === "true"
       ).length;
 
-      this.isContainerPublic = await this.repository._isContainerPublic(this.containerName)
+      this.isContainerPublic = await this.repository._isContainerPublic(
+        this.containerName
+      );
 
       this.loading = false;
 
@@ -272,24 +273,20 @@ export default {
       if (this.pipelineStatus == null) {
         this.pipelineStatus = { status: "n/a", message: "", runEnd: "" };
       }
-
     },
     onFileSelection(event) {
       this.fileBlob = event[0];
       this.originalFileName = event[0].name;
-      this.uploadSuccessful = false;
     },
     async uploadFile() {
       this.uploading = true;
-      this.uploadSuccessful = false;
-      this.errorMessage = null;
       if (!this.fileBlob) {
-        this.setErrorState("Please select a file to be uploaded.");
+        this.setUploadErrorState("Please select a file to be uploaded.");
         return;
       }
 
       if (!this.destinationFileName) {
-        this.setErrorState(
+        this.setUploadErrorState(
           "Please select a destination file name for the upload."
         );
         return;
@@ -302,15 +299,13 @@ export default {
         this.containsPii,
         formData
       );
-      this.uploadSuccessful = true;
+      this.displayUploadSuccessDialog();
       this.uploading = false;
 
       await this.updateBusinessUnitContent();
     },
-    setErrorState(errorMessage) {
-      this.errorOccured = true;
-      this.errorMessage = errorMessage;
-      this.uploadSuccessful = false;
+    setUploadErrorState(errorMessage) {
+      window.alert(errorMessage);
       this.uploading = false;
     },
     async updateContainer(containerName) {
@@ -335,6 +330,15 @@ export default {
         blobItem.fileName,
         blobItem.snapshot
       );
+    },
+    alertPipelineErrorMessage() {
+      window.alert(this.pipelineStatus.message);
+    },
+    closeUploadSuccessDialog() {
+      this.$refs["upload-success-dialog"].close();
+    },
+    displayUploadSuccessDialog() {
+      this.$refs["upload-success-dialog"].showModal();
     }
   }
 };
