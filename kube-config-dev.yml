@@ -25,33 +25,27 @@ spec:
         - containerPort: 80
         env:
           - name: AZURE_STORAGE_ACCOUNT
-            value: #{AZURE_STORAGE_ACCOUNT}#
+            value: #{STORAGE-ACCOUNT-DEV}#
           - name: AZURE_STORAGE_ACCOUNT_KEY
-            value: #{AZURE_STORAGE_ACCOUNT_KEY}#
-          - name: FLYWAY_URL
-            value: #{FLYWAY_URL}#
-          - name: FLYWAY_USER
-            value: #{FLYWAY_USER}#
-          - name: FLYWAY_PASSWORD
-            value: #{FLYWAY_PASSWORD}#
+            value: #{STORAGE-ACCOUNT-KEY-DEV}#
           - name: AZURE_OAUTH_CLIENT_ID
-            value: #{AZURE_OAUTH_CLIENT_ID}#
+            value: #{OAUTH-CLIENT-ID}#
           - name: AZURE_OAUTH_CLIENT_SECRET
-            value: #{AZURE_OAUTH_CLIENT_SECRET}#
+            value: #{OAUTH-CLIENT-SECRET}#
           - name: AZURE_OAUTH_TENANT_ID
-            value: #{AZURE_OAUTH_TENANT_ID}#
+            value: #{OAUTH-TENANT-ID}#
           - name: DATAFACTORY_CLIENT_ID
-            value: #{DATAFACTORY_CLIENT_ID}#
+            value: #{DATAFACTORY-CLIENT-ID-DEV}#
           - name: DATAFACTORY_CLIENT_SECRET
-            value: #{DATAFACTORY_CLIENT_SECRET}#
+            value: #{DATAFACTORY-CLIENT-SECRET-DEV}#
           - name: DATAFACTORY_NAME
-            value: #{DATAFACTORY_NAME}#
+            value: #{DATAFACTORY-NAME-DEV}#
           - name: DATAFACTORY_RESOURCE_GROUP
-            value: #{DATAFACTORY_RESOURCE_GROUP}#
+            value: #{DATAFACTORY-RESOURCE-GROUP-DEV}#
           - name: AZURE_SUBSCRIPTION_ID
-            value: #{AZURE_SUBSCRIPTION_ID}#
+            value: #{SUBSCRIPTION-ID-DEV}#
           - name: AZURE_TENANT_ID
-            value: #{AZURE_TENANT_ID}#
+            value: #{TENANT-ID-DEV}#
           - name: SPRING_PROFILES_ACTIVE
             value: production
           - name: BUILD_ID
