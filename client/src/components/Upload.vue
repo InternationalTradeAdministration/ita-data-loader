@@ -64,7 +64,7 @@
                   href="#"
                 >Error-{{this.pipelineStatus.runEnd}}</a>
               </span>
-              <span v-else>Succeeded-{{this.pipelineStatus.runEnd}}</span>
+              <span v-else>{{pipelineStatus.status}}-{{this.pipelineStatus.runEnd}}</span>
             </span>
             <md-switch
               class="display-switch"
