@@ -2,8 +2,8 @@ spring:
   profiles: development
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 250MB
+      max-request-size: 250MB
 build-id: n/a
 ---
 spring:
@@ -13,8 +13,8 @@ spring:
     format_sql: true
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 250MB
+      max-request-size: 250MB
 storage-params:
   azure-storage-account: ${AZURE_STORAGE_ACCOUNT}
   azure-storage-account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
@@ -32,8 +32,8 @@ spring:
   profiles: production
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 250MB
+      max-request-size: 250MB
   security:
     oauth2:
       client:
