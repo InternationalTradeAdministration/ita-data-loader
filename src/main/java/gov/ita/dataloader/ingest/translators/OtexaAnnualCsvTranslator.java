@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OtexaHtsCsvTranslator implements Translator {
+public class OtexaAnnualCsvTranslator implements Translator {
+
+  private ScientificNotationTranslator snt = new ScientificNotationTranslator();
 
   @Override
   public byte[] translate(byte[] bytes) {
@@ -22,7 +24,7 @@ public class OtexaHtsCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("CTRY_ID", "CAT_ID", "HTS", "SYEF", "HEADER_ID", "VAL"));
+        .withHeader("Country", "CAT_ID", "HTS", "SYEF", "HEADER_ID", "VAL"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -37,17 +39,19 @@ public class OtexaHtsCsvTranslator implements Translator {
         .collect(Collectors.toList());
 
       for (CSVRecord csvRecord : csvParser.getRecords()) {
-        String ctryNum = csvRecord.get("CTRYNUM");
+        String country = csvRecord.get("CNAME");
         String catId = csvRecord.get("CAT");
         String syef = csvRecord.get("SYEF");
         String hts = csvRecord.get("HTS");
 
         for (String header : valueFields) {
           String val = csvRecord.get(header);
-          if (val != null)
+          if (val != null) {
+            if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              ctryNum, catId, hts, syef, header, val
+              country, catId, hts, syef, header, val
             );
+          }
         }
       }
 

@@ -13,21 +13,21 @@ import java.util.stream.Collectors;
 import static gov.ita.dataloader.TestHelpers.formattedResults;
 import static org.junit.Assert.assertEquals;
 
-public class OtexaHtsCsvTranslatorTest {
+public class OtexaAnnualCsvTranslatorTest {
 
-  private TestHelpers h = new TestHelpers();
+  private final TestHelpers h = new TestHelpers();
   private List<CSVRecord> results;
 
   @Before
   public void setUp() {
-    OtexaHtsCsvTranslator otexaHtsCsvTranslator = new OtexaHtsCsvTranslator();
-    byte[] translatedBytes = otexaHtsCsvTranslator.translate(h.get("/fixtures/otexa/OTEXA_EXE_HTS.csv"));
+    OtexaAnnualCsvTranslator otexaAnnualCsvTranslator = new OtexaAnnualCsvTranslator();
+    byte[] translatedBytes = otexaAnnualCsvTranslator.translate(h.get("/fixtures/otexa/ANNUAL.csv"));
     results = formattedResults(translatedBytes);
   }
 
   @Test
-  public void translates_CTRYNUM() {
-    assertEquals("888", results.get(0).get("CTRY_ID"));
+  public void translates_CNAME() {
+    assertEquals("Greece", results.get(0).get("Country"));
   }
 
   @Test
@@ -133,11 +133,11 @@ public class OtexaHtsCsvTranslatorTest {
     expected.put("VAL2015", "2503140");
     expected.put("VAL2016", "2954847");
 
-    expected.put("TSUSA", "3921121500");
+    expected.put("TSUSA", "104916000000.000000"); //scientific notation
 
     //Only checking the first record
     List<CSVRecord> otexaHtsRecords =
-      results.stream().filter(r -> r.get("CTRY_ID").equals("888")).collect(Collectors.toList());
+      results.stream().filter(r -> r.get("Country").equals("Greece")).collect(Collectors.toList());
 
     for (CSVRecord r : otexaHtsRecords) {
       String header = r.get("HEADER_ID");

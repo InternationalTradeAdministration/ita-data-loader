@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SimaCensusCsvTranslatorTest {
 
-  private TestHelpers h = new TestHelpers();
+  private final TestHelpers h = new TestHelpers();
   private List<CSVRecord> results;
 
   @Before

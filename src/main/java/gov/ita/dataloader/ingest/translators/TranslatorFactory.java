@@ -11,11 +11,11 @@ public class TranslatorFactory {
   private static final Map<String, Translator> translators = new HashMap<>();
 
   static {
-    translators.put("otexa#OTEXA_DATA_SET_CAT.csv", new OtexaCatCsvTranslator());
-    translators.put("otexa#OTEXA_EXE_HTS.csv", new OtexaHtsCsvTranslator());
+    translators.put("otexa#ANNUAL.csv", new OtexaAnnualCsvTranslator());
+    translators.put("otexa#ANNUAL_FOOTWEAR_VALUE.csv", new OtexaAnnualFootwearCsvTranslator("DOLLARS"));
+    translators.put("otexa#ANNUAL_FOOTWEAR_QTY.csv", new OtexaAnnualFootwearCsvTranslator("QTY"));
     translators.put("select-usa#WORLDBANK_EASE_COUNTRY_INDEX.csv", new WorldBankEaseIndexCsvTranslator());
     translators.put("sima#census", new SimaCensusCsvTranslator());
-
   }
 
   public Translator getTranslator(String containerFileCompositeKey) {

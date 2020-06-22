@@ -13,7 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OtexaCatCsvTranslator implements Translator {
+public class OtexaAnnualFootwearCsvTranslator implements Translator {
+
+  private final String dataType;
+
+  private final ScientificNotationTranslator snt = new ScientificNotationTranslator();
+
+  public OtexaAnnualFootwearCsvTranslator(String dataType) {
+    this.dataType = dataType;
+  }
 
   @Override
   public byte[] translate(byte[] bytes) {
@@ -22,7 +30,7 @@ public class OtexaCatCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("CTRY_ID", "CAT_ID", "SYEF", "HEADER_ID", "VAL"));
+        .withHeader("Country", "CAT_ID", "HTS", "Quantity", "NAICS", "HEADER_ID", "VAL", "DATA_TYPE"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -33,20 +41,24 @@ public class OtexaCatCsvTranslator implements Translator {
       Map<String, Integer> headers = csvParser.getHeaderMap();
 
       List<String> valueFields = headers.keySet().stream()
-        .filter(header -> header.startsWith("D") || header.startsWith("QTY") || header.startsWith("VAL"))
+        .filter(header -> header.startsWith("Y"))
         .collect(Collectors.toList());
 
-      for (CSVRecord csvRecord : csvParser) {
-        String ctryNum = csvRecord.get("CTRYNUM");
-        String catId = csvRecord.get("CAT");
-        String syef = csvRecord.get("SYEF");
+      for (CSVRecord csvRecord : csvParser.getRecords()) {
+        String ctryNum = csvRecord.get("Country");
+        String catId = csvRecord.get("Category");
+        String hts = csvRecord.get("HTS");
+        String quantity = csvRecord.get("Quantity");
+        String naics = csvRecord.get("NAICS");
 
         for (String header : valueFields) {
           String val = csvRecord.get(header);
-          if (val != null)
+          if (val != null) {
+            if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              ctryNum, catId, syef, header, val
+              ctryNum, catId, hts, quantity, naics, header, val, this.dataType
             );
+          }
         }
       }
 

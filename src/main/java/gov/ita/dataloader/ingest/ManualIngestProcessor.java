@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ManualIngestProcessor {
@@ -26,9 +27,21 @@ public class ManualIngestProcessor {
   public CompletableFuture<String> process(String containerName, String fileName, byte[] fileBytes) {
     if (translationProcessor.hasTranslator(containerName, fileName)) {
       updateLog(containerName, String.format("Translating file: %s", fileName));
-      translationProcessor.process(containerName, fileName, fileBytes);
+      CompletableFuture<String> process = translationProcessor.process(containerName, fileName, fileBytes);
+      if (process.isCompletedExceptionally()) {
+        try {
+          process.get();
+        } catch (InterruptedException | ExecutionException e) {
+          updateLog(containerName, e.getMessage());
+          e.printStackTrace();
+          return CompletableFuture.failedFuture(e);
+        }
+      }
     }
+
+    updateLog(containerName, String.format("Triggering data factory pipeline: %s", containerName));
     dataFactoryGateway.runPipeline(containerName);
+
     updateLog(containerName, String.format("Completed uploading file: %s", fileName));
     return CompletableFuture.completedFuture("complete");
   }

@@ -37,7 +37,7 @@ public class TranslationProcessor {
       log.info("Processing {}", containerFileCompositeKey);
       storage.delete(containerName, fileRootName);
 
-      if (translator.type().equals(TranslatorType.CSV) && translator.pageSize() != -1) {
+      if (translator.type().equals(TranslatorType.CSV) && translator.pageSize() > 0) {
         int lineCount = countLines(fileBytes);
         int pageSize = translator.pageSize();
         if (pageSize == -1) pageSize = lineCount;
@@ -48,7 +48,12 @@ public class TranslationProcessor {
           log.info("Translating page {} of {} for {}", currentPage + 1, totalPages, containerFileCompositeKey);
           int offset = currentPage * pageSize;
           byte[] partitionedBytes = getFilePartition(fileBytes, offset, pageSize);
-          byte[] translatedBytes = translator.translate(partitionedBytes);
+          byte[] translatedBytes = null;
+          try {
+            translatedBytes = translator.translate(partitionedBytes);
+          } catch (IllegalArgumentException e) {
+            return CompletableFuture.failedFuture(e);
+          }
           storage.save(fileRootName + "/" + UUID.randomUUID(), translatedBytes, "system", containerName, true, false);
           currentPage++;
         }

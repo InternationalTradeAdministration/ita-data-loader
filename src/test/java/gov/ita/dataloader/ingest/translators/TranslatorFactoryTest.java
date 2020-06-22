@@ -9,20 +9,29 @@ import static org.junit.Assert.assertThat;
 public class TranslatorFactoryTest {
 
   @Test
-  public void returnsOtexaCatTranslator() {
+  public void returnsOtexaAnnualTranslator() {
     TranslatorFactory translatorFactory = new TranslatorFactory();
-    Translator translator = translatorFactory.getTranslator("otexa#OTEXA_DATA_SET_CAT.csv");
-    assertThat(translator, instanceOf(OtexaCatCsvTranslator.class));
+    Translator translator = translatorFactory.getTranslator("otexa#ANNUAL.csv");
+    assertThat(translator, instanceOf(OtexaAnnualCsvTranslator.class));
+    assertEquals(25000, translator.pageSize());
+    assertEquals(TranslatorType.CSV, translator.type());
+  }
+
+  @Test
+  public void returnsOtexaAnnualFootwearValueTranslator() {
+    TranslatorFactory translatorFactory = new TranslatorFactory();
+    Translator translator = translatorFactory.getTranslator("otexa#ANNUAL_FOOTWEAR_VALUE.csv");
+    assertThat(translator, instanceOf(OtexaAnnualFootwearCsvTranslator.class));
     assertEquals(-1, translator.pageSize());
     assertEquals(TranslatorType.CSV, translator.type());
   }
 
   @Test
-  public void returnsOtexaHtsTranslator() {
+  public void returnsOtexaAnnualFootwearQtyTranslator() {
     TranslatorFactory translatorFactory = new TranslatorFactory();
-    Translator translator = translatorFactory.getTranslator("otexa#OTEXA_EXE_HTS.csv");
-    assertThat(translator, instanceOf(OtexaHtsCsvTranslator.class));
-    assertEquals(25000, translator.pageSize());
+    Translator translator = translatorFactory.getTranslator("otexa#ANNUAL_FOOTWEAR_QTY.csv");
+    assertThat(translator, instanceOf(OtexaAnnualFootwearCsvTranslator.class));
+    assertEquals(-1, translator.pageSize());
     assertEquals(TranslatorType.CSV, translator.type());
   }
 

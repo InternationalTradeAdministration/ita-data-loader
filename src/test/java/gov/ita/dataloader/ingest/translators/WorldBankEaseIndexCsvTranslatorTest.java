@@ -12,7 +12,7 @@ import static gov.ita.dataloader.TestHelpers.formattedResults;
 import static org.junit.Assert.assertEquals;
 
 public class WorldBankEaseIndexCsvTranslatorTest {
-  private TestHelpers h = new TestHelpers();
+  private final TestHelpers h = new TestHelpers();
 
   private List<CSVRecord> results;
 
