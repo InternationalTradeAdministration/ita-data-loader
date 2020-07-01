@@ -91,12 +91,14 @@
                 <label v-if="item.snapshot">{{item.fileName + ' (' + item.snapshot + ')'}}</label>
                 <label v-else>{{item.fileName}}</label>
               </md-table-cell>
+              <md-table-cell md-label="Public URL" v-if="isContainerPublic">
+                <input :value="item.url" class="public-url"/>
+              </md-table-cell>
               <md-table-cell md-label="Uploaded At" md-sort-by="uploadedAt">{{item.uploadedAt}}</md-table-cell>
               <md-table-cell
                 md-label="Uploaded By"
                 md-sort-by="metadata.uploaded_by"
               >{{item.metadata.uploaded_by}}</md-table-cell>
-              <md-table-cell md-label="Size" md-sort-by="size" md-numeric>{{item.size}}</md-table-cell>
               <md-table-cell md-label="PII" md-sort-by="metadata.pii">
                 <span v-if="item.metadata.pii === 'true'" class="dot filled"></span>
                 <span v-else class="dot"></span>
@@ -181,6 +183,10 @@ dialog {
 
 dialog + .backdrop {
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.public-url {
+  margin-top: 8px;
 }
 </style>
 <script>
@@ -339,7 +345,11 @@ export default {
     },
     displayUploadSuccessDialog() {
       this.$refs["upload-success-dialog"].showModal();
-    }
+    },
+    // copyToClipboard(text) {
+    //   this.$refs['decrypt-url'].select()
+    //   document.execCommand('copy')
+    // }
   }
 };
 </script>
