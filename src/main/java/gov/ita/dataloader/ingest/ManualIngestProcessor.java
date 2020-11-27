@@ -34,13 +34,13 @@ public class ManualIngestProcessor {
         } catch (InterruptedException | ExecutionException e) {
           updateLog(containerName, e.getMessage());
           e.printStackTrace();
-          return CompletableFuture.failedFuture(e);
+          return CompletableFuture.failedFuture(e); 
         }
       }
     }
 
     updateLog(containerName, String.format("Triggering data factory pipeline: %s", containerName));
-    dataFactoryGateway.runPipeline(containerName);
+    dataFactoryGateway.runPipeline(containerName, fileName);
 
     updateLog(containerName, String.format("Completed uploading file: %s", fileName));
     return CompletableFuture.completedFuture("complete");

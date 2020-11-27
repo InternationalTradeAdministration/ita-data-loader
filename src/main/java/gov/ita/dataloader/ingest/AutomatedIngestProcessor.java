@@ -109,7 +109,7 @@ public class AutomatedIngestProcessor {
       log.info("Ingest process complete for container: {}", containerName);
       updateLog(containerName, String.format("Process complete; ingested (%s of %s)", completedApiCalls, totalApiCalls));
       stopProcessing.put(containerName, false);
-      dataFactoryGateway.runPipeline(containerName);
+      dataFactoryGateway.runPipeline(containerName, "");
     }
 
     return CompletableFuture.completedFuture("complete");

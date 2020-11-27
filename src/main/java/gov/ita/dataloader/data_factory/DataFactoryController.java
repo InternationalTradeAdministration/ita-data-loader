@@ -21,7 +21,7 @@ public class DataFactoryController {
   }
 
   @GetMapping("/run-pipeline")
-  public void runPipeline(@RequestParam("pipelineName") String pipelineName) {
-    dataFactoryGateway.runPipeline(pipelineName);
+  public void runPipeline(@RequestParam("pipelineName") String pipelineName, @RequestParam(required = false, name =  "fileName") String fileName) {
+    dataFactoryGateway.runPipeline(pipelineName, fileName);
   }
 }

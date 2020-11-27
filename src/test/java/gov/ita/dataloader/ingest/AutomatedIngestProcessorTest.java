@@ -178,7 +178,7 @@ public class AutomatedIngestProcessorTest {
     AutomatedIngestProcessor automatedIngestProcessor =
       new AutomatedIngestProcessor(zipFileExtractor, httpHelper, translationProcessor, storage, datafactoryGateway);
     automatedIngestProcessor.process(dataSetConfigs, "a-container", "TestUser@gmail.com", 0);
-    verify(datafactoryGateway, times(1)).runPipeline("a-container");
+    verify(datafactoryGateway, times(1)).runPipeline("a-container", "");
   }
 
   private ByteArrayOutputStream convert(String s) {

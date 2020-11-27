@@ -50,11 +50,14 @@ public class ProductionDataFactoryGateway implements DataFactoryGateway {
   }
 
   @Override
-  public void runPipeline(String pipelineName) {
+  public void runPipeline(String pipelineName, String fileName) {
     log.info("Starting pipeline run: {}", pipelineName);
     String apiUrl = getBaseApiUrl() + String.format("/pipelines/%s/createRun?api-version=2018-06-01", pipelineName);
-    HttpEntity<String> request = new HttpEntity<>("", buildHeaders());
-    restTemplate.postForLocation(apiUrl, request);
+
+    String param = "{\"fileName\": \"" + fileName + "\" }";
+    HttpEntity<String> request = new HttpEntity<>(param, buildHeaders());
+
+    restTemplate.postForLocation(apiUrl, request, String.class);
   }
 
   private HttpHeaders buildHeaders() {
