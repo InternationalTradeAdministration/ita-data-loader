@@ -25,7 +25,7 @@ public class DevelopmentDataFactoryGateway implements DataFactoryGateway {
   }
 
   @Override
-  public void runPipeline(String pipelineName, String fileName) {
+  public void runPipeline(String pipelineName) {
     log.info("Starting pipeline run: {}", pipelineName);
   }
 }
