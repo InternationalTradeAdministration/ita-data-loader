@@ -24,7 +24,7 @@ public class OtexaPartCatImportsCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("country", "PART CAT", "CAT", "HTS", "SYEF", "HEADER_ID", "VAL"));
+        .withHeader("country", "PART CAT", "CAT", "HTS", "SYEF", "YR", "MON","HEADER_ID", "VAL"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -44,13 +44,15 @@ public class OtexaPartCatImportsCsvTranslator implements Translator {
         String catID = csvRecord.get("CAT");
         String hts = csvRecord.get("HTS");
         String syef = csvRecord.get("SYEF");
+        String yr = csvRecord.get("YR");
+        String mon = csvRecord.get("MON");
 
         for (String header : valueFields) {
           String val = csvRecord.get(header);
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              country, partCat, catID, hts, syef, header, val
+              country, partCat, catID, hts, syef, yr, mon, header, val
             );
           }
         }
