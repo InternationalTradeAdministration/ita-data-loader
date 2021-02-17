@@ -56,29 +56,29 @@ public class OtexaAnnualFootwearCsvTranslatorTest {
   }
 
   @Test
-  public void translates_Y_Fields() {
+  public void translates_Year_Fields() {
     Map<String, String> expected = new HashMap<>();
-    expected.put("Y_2001", "1");
-    expected.put("Y_2002", "2");
-    expected.put("Y_2003", "3");
-    expected.put("Y_2004", "4");
-    expected.put("Y_2005", "5");
-    expected.put("Y_2006", "6");
-    expected.put("Y_2007", "7");
-    expected.put("Y_2008", "8");
-    expected.put("Y_2009", "9");
-    expected.put("Y_2010", "10");
-    expected.put("Y_2011", "11");
-    expected.put("Y_2012", "12");
-    expected.put("Y_2013", "13");
-    expected.put("Y_2014", "14");
-    expected.put("Y_2015", "15");
-    expected.put("Y_2016", "16");
-    expected.put("Y_2017", "17");
-    expected.put("Y_2018", "18");
-    expected.put("Y_2019", "19");
-    expected.put("Y_2019_YTD", "20");
-    expected.put("Y_2020_YTD", "104916000000.000000"); //scientific notation
+    expected.put("2001", "1");
+    expected.put("2002", "2");
+    expected.put("2003", "3");
+    expected.put("2004", "4");
+    expected.put("2005", "5");
+    expected.put("2006", "6");
+    expected.put("2007", "7");
+    expected.put("2008", "8");
+    expected.put("2009", "9");
+    expected.put("2010", "10");
+    expected.put("2011", "11");
+    expected.put("2012", "12");
+    expected.put("2013", "13");
+    expected.put("2014", "14");
+    expected.put("2015", "15");
+    expected.put("2016", "16");
+    expected.put("2017", "17");
+    expected.put("2018", "18");
+    expected.put("2019", "19");
+    expected.put("2019_YTD", "20");
+    expected.put("2020_YTD", "104916000000.000000"); //scientific notation
 
     //Only checking the first record
     List<CSVRecord> footwearValueRecords =
