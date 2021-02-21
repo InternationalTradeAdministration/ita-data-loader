@@ -30,7 +30,7 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("Country", "CAT_ID", "HTS", "Quantity", "NAICS", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
+        .withHeader("Country", "CAT_ID", "HTS", "Quantity", "DOLLAR_SIGN", "NAICS", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -50,6 +50,7 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
         String hts = csvRecord.get("HTS");
         String quantity = csvRecord.get("Quantity");
         String naics = csvRecord.get("NAICS");
+        String dollarSign = "$";
         String yr = csvRecord.get("yr");
         String mon = csvRecord.get("mon");
 
@@ -58,7 +59,7 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              ctryNum, catId, hts, quantity, naics, yr, mon, header, val, this.dataType
+              ctryNum, catId, hts, quantity, dollarSign, naics, yr, mon, header, val, this.dataType
             );
           }
         }
