@@ -30,7 +30,7 @@ public class OtexaExportFootwearCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("Country", "ctrynum", "CAT_ID", "Category_Description", "Schedule_B", "Schedule_B_Description", "Quantity", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
+        .withHeader("Country", "ctrynum", "CAT_ID", "Category_Description", "Schedule_B", "Schedule_B_Description", "Quantity", "DOLLAR_SIGN", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -52,6 +52,7 @@ public class OtexaExportFootwearCsvTranslator implements Translator {
         String scheduleB = csvRecord.get("Schedule_B");
         String scheduleBDescription = csvRecord.get("Schedule_B_Description");
         String quantity = csvRecord.get("Quantity");
+        String dollarSign = "$";
         String yr = csvRecord.get("yr");
         String mon = csvRecord.get("mon");
 
@@ -60,7 +61,7 @@ public class OtexaExportFootwearCsvTranslator implements Translator {
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              country, ctryNum, catId, catDesc, scheduleB, scheduleBDescription, quantity, yr, mon, header, val, this.dataType
+              country, ctryNum, catId, catDesc, scheduleB, scheduleBDescription, quantity, dollarSign, yr, mon, header, val, this.dataType
             );
           }
         }
