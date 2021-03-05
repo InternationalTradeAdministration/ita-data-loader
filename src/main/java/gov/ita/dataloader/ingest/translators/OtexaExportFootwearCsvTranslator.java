@@ -41,7 +41,7 @@ public class OtexaExportFootwearCsvTranslator implements Translator {
       Map<String, Integer> headers = csvParser.getHeaderMap();
 
       List<String> valueFields = headers.keySet().stream()
-        .filter(header -> header.startsWith("Y"))
+        .filter(header -> header.startsWith("2"))
         .collect(Collectors.toList());
 
       for (CSVRecord csvRecord : csvParser.getRecords()) {
