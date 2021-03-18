@@ -33,6 +33,7 @@ public class StorageInitializer {
     newContainers.put("fta-tariff-rates", new ContainerConfig(false, true));
     newContainers.put("i92", new ContainerConfig(false, false));
     newContainers.put("industry-data", new ContainerConfig(false, false));
+    newContainers.put("ntto", new ContainerConfig(false, true));
     newContainers.put("otexa", new ContainerConfig(false, false));
     newContainers.put("select-usa", new ContainerConfig(true, false));
     newContainers.put("siat", new ContainerConfig(false, false));
