@@ -24,7 +24,7 @@ public class OtexaMergedCatImportsCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("Country", "CAT_ID", "MERG_CAT", "HTS", "Description", "SYEF", "UOM", "M2", "DOLLAR_SIGN", "YR", "MON","HEADER_ID", "VAL"));
+        .withHeader("Country", "CTRYNUM", "CAT_ID", "MERG_CAT", "HTS", "Description", "SYEF", "UOM", "M2", "DOLLAR_SIGN", "YR", "MON","HEADER_ID", "VAL"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -40,6 +40,7 @@ public class OtexaMergedCatImportsCsvTranslator implements Translator {
 
       for (CSVRecord csvRecord : csvParser.getRecords()) {
         String country = csvRecord.get("country");
+        String ctrynum = csvRecord.get("CTRYNUM");
         String catId = csvRecord.get("CAT");
         String mergeCat = csvRecord.get("MERG CAT");
         String hts = csvRecord.get("HTS");
@@ -56,7 +57,7 @@ public class OtexaMergedCatImportsCsvTranslator implements Translator {
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              country, catId, mergeCat, hts, description, syef, uom, m2, dollarSign, yr, mon, header, val
+              country, ctrynum, catId, mergeCat, hts, description, syef, uom, m2, dollarSign, yr, mon, header, val
             );
           }
         }
