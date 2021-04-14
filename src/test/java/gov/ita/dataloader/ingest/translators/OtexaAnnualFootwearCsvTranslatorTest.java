@@ -31,6 +31,11 @@ public class OtexaAnnualFootwearCsvTranslatorTest {
   }
 
   @Test
+  public void translates_CTRYNUM() {
+    assertEquals("4840", results.get(0).get("CTRYNUM"));
+  }
+
+  @Test
   public void translates_CAT_ID() {
     assertEquals("100", results.get(0).get("CAT_ID"));
   }

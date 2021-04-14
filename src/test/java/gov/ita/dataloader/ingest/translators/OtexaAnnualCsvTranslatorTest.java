@@ -31,6 +31,11 @@ public class OtexaAnnualCsvTranslatorTest {
   }
 
   @Test
+  public void translates_CTRYNUM() {
+    assertEquals("4840", results.get(0).get("CTRYNUM"));
+  }
+
+  @Test
   public void translates_CAT() {
     assertEquals("229", results.get(0).get("CAT_ID"));
   }

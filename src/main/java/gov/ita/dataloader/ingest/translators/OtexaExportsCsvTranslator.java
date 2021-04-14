@@ -24,7 +24,7 @@ public class OtexaExportsCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("SCHEDB", "YR", "MON", "GRP", "CNAME", "HEADER_ID", "VAL"));
+        .withHeader("SCHEDB", "YR", "MON", "GRP", "CNAME", "CTRYNUM", "HEADER_ID", "VAL"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -44,13 +44,14 @@ public class OtexaExportsCsvTranslator implements Translator {
         String mon = csvRecord.get("MON");
         String grp = csvRecord.get("grp");
         String cname = csvRecord.get("cname");
+        String ctrynum = csvRecord.get("CTRYNUM");
 
         for (String header : valueFields) {
           String val = csvRecord.get(header);
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              schedb, yr, mon, grp, cname, header, val
+              schedb, yr, mon, grp, cname, ctrynum, header, val
             );
           }
         }

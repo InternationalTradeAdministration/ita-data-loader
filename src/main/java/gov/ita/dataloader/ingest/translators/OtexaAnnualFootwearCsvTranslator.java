@@ -30,7 +30,7 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("Country", "CAT_ID", "HTS", "Quantity", "DOLLAR_SIGN", "NAICS", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
+        .withHeader("Country", "CTRYNUM", "CAT_ID", "HTS", "Quantity", "DOLLAR_SIGN", "NAICS", "yr", "mon", "HEADER_ID", "VAL", "DATA_TYPE"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -45,7 +45,8 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
         .collect(Collectors.toList());
 
       for (CSVRecord csvRecord : csvParser.getRecords()) {
-        String ctryNum = csvRecord.get("Country");
+        String country = csvRecord.get("Country");
+        String ctrynum = csvRecord.get("ctrynum");
         String catId = csvRecord.get("Category");
         String hts = csvRecord.get("HTS");
         String quantity = csvRecord.get("Quantity");
@@ -59,7 +60,7 @@ public class OtexaAnnualFootwearCsvTranslator implements Translator {
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              ctryNum, catId, hts, quantity, dollarSign, naics, yr, mon, header, val, this.dataType
+              country, ctrynum, catId, hts, quantity, dollarSign, naics, yr, mon, header, val, this.dataType
             );
           }
         }
