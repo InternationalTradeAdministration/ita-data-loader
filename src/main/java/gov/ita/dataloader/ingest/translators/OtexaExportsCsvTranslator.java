@@ -15,7 +15,13 @@ import java.util.stream.Collectors;
 
 public class OtexaExportsCsvTranslator implements Translator {
 
-  private ScientificNotationTranslator snt = new ScientificNotationTranslator();
+  private final String dataType;
+
+  private final ScientificNotationTranslator snt = new ScientificNotationTranslator();
+
+  public OtexaExportsCsvTranslator(String dataType) {
+    this.dataType = dataType;
+  }
 
   @Override
   public byte[] translate(byte[] bytes) {
@@ -24,7 +30,7 @@ public class OtexaExportsCsvTranslator implements Translator {
 
     try {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
-        .withHeader("SCHEDB", "YR", "MON", "GRP", "CNAME", "CTRYNUM", "HEADER_ID", "VAL"));
+        .withHeader("SCHEDB", "YR", "MON", "GROUP", "COUNTRY", "CTRYNUM", "UOM", "DOLLAR_SIGN", "YTD Perc Chg", "YE Perc Chg", "HEADER_ID", "VAL", "DATA_TYPE"));
 
       Reader reader = new CharSequenceReader(new String(bytes));
       CSVParser csvParser;
@@ -35,23 +41,27 @@ public class OtexaExportsCsvTranslator implements Translator {
       Map<String, Integer> headers = csvParser.getHeaderMap();
 
       List<String> valueFields = headers.keySet().stream()
-        .filter(header -> header.startsWith("D") || header.startsWith("Q") || header.startsWith("VAL"))
+        .filter(header -> header.startsWith("D") || header.startsWith("Q") || header.startsWith("E"))
         .collect(Collectors.toList());
 
       for (CSVRecord csvRecord : csvParser.getRecords()) {
         String schedb = csvRecord.get("SCHEDB");
         String yr = csvRecord.get("YR");
         String mon = csvRecord.get("MON");
-        String grp = csvRecord.get("grp");
-        String cname = csvRecord.get("cname");
+        String group = csvRecord.get("GROUP");
+        String country = csvRecord.get("COUNTRY");
         String ctrynum = csvRecord.get("CTRYNUM");
+        String uom = csvRecord.get("UOM");
+        String dollarSign = "$";
+        String ytdPercChg = csvRecord.get("YTD Perc Chg");
+        String yePercChg = csvRecord.get("YE Perc Chg");
 
         for (String header : valueFields) {
           String val = csvRecord.get(header);
           if (val != null) {
             if (snt.isScientificNotation(val)) val = snt.translate(val);
             csvPrinter.printRecord(
-              schedb, yr, mon, grp, cname, ctrynum, header, val
+              schedb, yr, mon, group, country, ctrynum, uom, dollarSign, ytdPercChg, yePercChg, header, val, this.dataType
             );
           }
         }
