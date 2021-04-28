@@ -20,6 +20,7 @@ public class TranslatorFactory {
     translators.put("otexa#ANNUAL_FOOTWEAR_QTY.csv", new OtexaAnnualFootwearCsvTranslator("QTY"));
     translators.put("otexa#EXPORTS_VALUE.csv", new OtexaExportsCsvTranslator("DOLLARS"));
     translators.put("otexa#EXPORTS_QTY.csv", new OtexaExportsCsvTranslator("QTY"));
+    translators.put("otexa#Annual_Exports_Historical.csv", new OtexaExportsHistoricalCsvTranslator());
     translators.put("select-usa#WORLDBANK_EASE_COUNTRY_INDEX.csv", new WorldBankEaseIndexCsvTranslator());
     translators.put("sima#census", new SimaCensusCsvTranslator());
   }
