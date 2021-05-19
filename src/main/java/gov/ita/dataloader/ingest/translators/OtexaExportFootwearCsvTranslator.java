@@ -48,10 +48,10 @@ public class OtexaExportFootwearCsvTranslator implements Translator {
         String country = csvRecord.get("Country");
         String ctryNum = csvRecord.get("ctrynum");
         String catId = csvRecord.get("Category");
-        String catDesc = csvRecord.get("Category_Description");
-        String scheduleB = csvRecord.get("Schedule_B");
-        String scheduleBDescription = csvRecord.get("Schedule_B_Description");
-        String quantity = csvRecord.get("Quantity");
+        String catDesc = csvRecord.get("Category Description");
+        String scheduleB = csvRecord.get("Schedule B");
+        String scheduleBDescription = csvRecord.get("Schedule B Description");
+        String quantity = csvRecord.get("Units");
         String dollarSign = "$";
         String yr = csvRecord.get("yr");
         String mon = csvRecord.get("mon");
