@@ -26,7 +26,13 @@ public class OtexaAnnualCsvTranslator implements Translator {
       csvPrinter = new CSVPrinter(stringWriter, CSVFormat.DEFAULT
         .withHeader("Country", "CTRYNUM", "CAT_ID", "HTS", "SYEF", "UOM", "M2", "DOLLAR_SIGN", "YR", "MON", "HEADER_ID", "VAL"));
 
-      Reader reader = new CharSequenceReader(new String(bytes));
+      String byteOrderMark = "\uFEFF";
+      String byteString = new String(bytes);
+      if (byteString.startsWith(byteOrderMark)) {
+        byteString = byteString.substring(1);
+      }
+
+      Reader reader = new CharSequenceReader(byteString);
       CSVParser csvParser;
       csvParser = new CSVParser(
         reader,
