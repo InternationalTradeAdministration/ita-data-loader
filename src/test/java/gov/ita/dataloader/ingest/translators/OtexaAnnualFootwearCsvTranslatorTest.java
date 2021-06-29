@@ -46,8 +46,8 @@ public class OtexaAnnualFootwearCsvTranslatorTest {
   }
 
   @Test
-  public void translates_QUANTITY() {
-    assertEquals("PRS", results.get(0).get("Quantity"));
+  public void translates_UNITS() {
+    assertEquals("PRS", results.get(0).get("Units"));
   }
 
   @Test
