@@ -38,4 +38,4 @@ HELP.md
 deploy.sh
 /bin/
 
-/.env
+/*.env
