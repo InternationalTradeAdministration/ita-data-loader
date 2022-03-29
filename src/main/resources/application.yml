@@ -1,5 +1,7 @@
 spring:
-  profiles: development
+  config:
+    activate:
+      on-profile: development
   servlet:
     multipart:
       max-file-size: 250MB
@@ -7,7 +9,9 @@ spring:
 build-id: n/a
 ---
 spring:
-  profiles: staging
+  config:
+    activate:
+      on-profile: development
   jpa:
     show-sql: false
     format_sql: true
@@ -29,22 +33,18 @@ build-id: n/a
 
 ---
 spring:
-  profiles: production
+  config:
+    activate:
+      on-profile: production
   servlet:
     multipart:
       max-file-size: 250MB
       max-request-size: 250MB
-  security:
-    oauth2:
-      client:
-        registration:
-          azure:
-            client-id: ${AZURE_OAUTH_CLIENT_ID}
-            client-secret: ${AZURE_OAUTH_CLIENT_SECRET}
 azure:
   activedirectory:
     tenant-id: ${AZURE_OAUTH_TENANT_ID}
-    active-directory-groups: TSI_AllUsers
+    client-id: ${AZURE_OAUTH_CLIENT_ID}
+    client-secret: ${AZURE_OAUTH_CLIENT_SECRET}
 storage-params:
   azure-storage-account: ${AZURE_STORAGE_ACCOUNT}
   azure-storage-account-key: ${AZURE_STORAGE_ACCOUNT_KEY}

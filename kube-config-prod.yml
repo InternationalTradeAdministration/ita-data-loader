@@ -32,9 +32,9 @@ spec:
           - name: AZURE_STORAGE_ACCOUNT_KEY
             value: #{STORAGE-ACCOUNT-KEY-PROD}#
           - name: AZURE_OAUTH_CLIENT_ID
-            value: #{OAUTH-CLIENT-ID}#
+            value: #{NEW-OAUTH-CLIENT-ID}#
           - name: AZURE_OAUTH_CLIENT_SECRET
-            value: #{OAUTH-CLIENT-SECRET}#
+            value: #{NEW-OAUTH-CLIENT-SECRET}#
           - name: AZURE_OAUTH_TENANT_ID
             value: #{OAUTH-TENANT-ID}#
           - name: DATAFACTORY_CLIENT_ID

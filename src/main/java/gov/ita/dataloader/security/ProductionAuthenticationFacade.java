@@ -12,7 +12,7 @@ public class ProductionAuthenticationFacade implements AuthenticationFacade {
   @Override
   public String getUserName() {
     return ((DefaultOidcUser) SecurityContextHolder.getContext().getAuthentication()
-      .getPrincipal()).getAttributes().get("upn").toString();
+      .getPrincipal()).getAttributes().get("preferred_username").toString();
   }
 
 }
