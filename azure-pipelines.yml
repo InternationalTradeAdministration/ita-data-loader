@@ -37,7 +37,7 @@ steps:
       ArtifactName: 'manifest'
       publishLocation: 'Container'
     displayName: 'Publish Kube Config'
-  - task: DockerCompose@0
+  - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'ITADEV2-MSDataServicesAzure'
@@ -46,7 +46,7 @@ steps:
       action: 'Build services'
       additionalImageTags: '$(Build.BuildId)'
     displayName: 'Build Docker image'
-  - task: DockerCompose@0
+  - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'ITADEV2-MSDataServicesAzure'
