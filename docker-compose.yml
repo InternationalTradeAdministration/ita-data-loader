@@ -1,4 +1,3 @@
-version: '3'
 services:
   ita-dataloader:
     image: itadevacr.azurecr.io/ita-dataloader:latest
