@@ -4,9 +4,16 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+    dockerComposePath: /tmp/docker-compose
+
 steps:
   - script: |
       curl https://cdn.azul.com/zulu/bin/zulu14.27.1-ca-jdk14-linux_x64.tar.gz --output $(Agent.TempDirectory)/jdk-latest-linux_x64.tar.gz
+  - bash: |
+     sudo mkdir $(dockerComposePath)
+     sudo curl -SL https://github.com/docker/compose/releases/download/1.29.2/docker-compose-linux-x86_64 -o $(dockerComposePath)/docker-compose
+     sudo chmod 755 $(dockerComposePath)
   - task: JavaToolInstaller@0
     inputs:
       versionSpec: "14"
@@ -37,7 +44,7 @@ steps:
       ArtifactName: 'manifest'
       publishLocation: 'Container'
     displayName: 'Publish Kube Config'
-  - task: DockerCompose@0
+  - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'ITADEV2-MSDataServicesAzure'
@@ -46,7 +53,7 @@ steps:
       action: 'Build services'
       additionalImageTags: '$(Build.BuildId)'
     displayName: 'Build Docker image'
-  - task: DockerCompose@0
+  - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'ITADEV2-MSDataServicesAzure'
