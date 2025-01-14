@@ -29,7 +29,6 @@ datafactory:
   resource-group: ${DATAFACTORY_RESOURCE_GROUP}
 azure-tenant-id: ${AZURE_TENANT_ID}
 azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}
-build-id: n/a
 
 ---
 spring:
@@ -55,4 +54,3 @@ datafactory:
   resource-group: ${DATAFACTORY_RESOURCE_GROUP}
 azure-tenant-id: ${AZURE_TENANT_ID}
 azure-subscription-id: ${AZURE_SUBSCRIPTION_ID}
-build-id: ${BUILD_ID}
