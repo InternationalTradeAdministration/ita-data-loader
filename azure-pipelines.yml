@@ -87,11 +87,11 @@ stages:
         DockerNamespace: $(MDS_AZURE_ACR_DEV)
         DockerRepository: 'mds-ita-dataloader'
         DockerImageTag: $(Build.BuildId)
-    - task: AzureAppServiceManage@0
-      inputs:
-        azureSubscription: $(MDS_AZURE_RM_SC_DEV)
-        appType: 'webAppContainer'
-        ResourceGroupName: $(MDS_AZURE_RG_DEV)
-        WebAppName: $(MDS_AZURE_APP_DEV)
-        SourceSlot: staging
-        SwapWithProduction: true
+#    - task: AzureAppServiceManage@0
+#      inputs:
+#        azureSubscription: $(MDS_AZURE_RM_SC_DEV)
+#        appType: 'webAppContainer'
+#        ResourceGroupName: $(MDS_AZURE_RG_DEV)
+#        WebAppName: $(MDS_AZURE_APP_DEV)
+#        SourceSlot: staging
+#        SwapWithProduction: true
