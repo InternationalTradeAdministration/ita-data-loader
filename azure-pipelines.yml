@@ -81,8 +81,8 @@ stages:
         azureSubscription: $(MDS_AZURE_RM_SC_DEV)
         appType: 'webAppContainer'
         ResourceGroupName: $(MDS_AZURE_RG_DEV)
-        deployToSlotOrASE: true
-        slotName: staging
+#        deployToSlotOrASE: true
+#        slotName: staging
         WebAppName: $(MDS_AZURE_APP_DEV)
         DockerNamespace: $(MDS_AZURE_ACR_DEV)
         DockerRepository: 'mds-ita-dataloader'
